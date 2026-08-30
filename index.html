@@ -3,83 +3,232 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>New Tab</title>
+    <title>Cosmic — NASA Astronomy Picture of the Day</title>
+    <meta name="description" content="An immersive futuristic deep-space observation console for NASA's Astronomy Picture of the Day (APOD). Explore daily universe discoveries and historical archives.">
+    <meta property="og:title" content="Cosmic — NASA Astronomy Picture of the Day">
+    <meta property="og:description" content="Explore today's window into the universe through NASA's APOD observation console.">
+    <meta property="og:type" content="website">
+    <meta name="twitter:card" content="summary_large_image">
+    
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><circle cx='50' cy='50' r='35' fill='%236b8cff' opacity='0.8'/><ellipse cx='50' cy='50' rx='48' ry='16' fill='none' stroke='%23ffffff' stroke-width='3' transform='rotate(-20 50 50)'/></svg>">
     <link rel="stylesheet" href="style.css">
+    
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;700&family=Space+Grotesk:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;600;700;900&family=Outfit:wght@300;400;500;600&family=Space+Grotesk:wght@400;500;600&display=swap" rel="stylesheet">
 </head>
 <body>
-    <div class="background-container" id="bg-container">
-        <!-- Background image set dynamically -->
-        <canvas id="starfield"></canvas>
-        <div class="overlay"></div>
+    <!-- Multilayer Cosmic Deep Space Canvas & Celestial Atmosphere -->
+    <div class="space-viewport" id="space-viewport">
+        <canvas id="starfield-canvas"></canvas>
+        <div class="nebula-layer layer-nebula"></div>
+        <div class="planet-giant layer-planet-1"></div>
+        <div class="planet-horizon layer-planet-2"></div>
+        <div class="space-overlay"></div>
     </div>
 
-    <main class="content-wrapper">
-        <header class="top-bar">
-            <button class="nasa-info-btn glass-panel-sm" id="nasa-info" aria-label="View NASA Astronomy Picture of the Day details">
-                <div class="badge">NASA APOD</div>
-                <p id="nasa-title" class="nasa-title">Loading image data...</p>
-            </button>
-            <div class="search-container">
+    <!-- Main Console Navigation Header -->
+    <header class="hud-header layer-ui">
+        <div class="brand-logo">
+            <span class="hud-icon">
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75"><circle cx="12" cy="12" r="9"/><path d="M3.6 9h16.8M3.6 15h16.8"/><ellipse cx="12" cy="12" rx="4" ry="9"/></svg>
+            </span>
+            <div class="brand-text">
+                <span class="brand-name">COSMIC</span>
+                <span class="brand-sub">OBSERVATION CONSOLE</span>
+            </div>
+        </div>
+
+        <nav class="hud-nav" aria-label="Main Navigation">
+            <button class="nav-link active" id="nav-today" aria-current="page">TODAY</button>
+            <button class="nav-link" id="nav-archive">ARCHIVE</button>
+            <button class="nav-link" id="nav-about">MISSION</button>
+        </nav>
+
+        <div class="hud-controls">
+            <div class="clock-hud" id="clock-btn" tabIndex="0" role="button" title="Click to toggle 12h/24h format" aria-label="Toggle 12/24 hour time format">
+                <span id="hud-time">00:00:00</span>
+                <span class="hud-tz">UTC</span>
+            </div>
+            <div class="search-wrap">
                 <form id="search-form" action="https://www.google.com/search" method="GET" role="search">
-                    <input type="text" name="q" id="search-input" placeholder="Search the web... (Press '/')" class="search-input" aria-label="Search the web via Google" autofocus>
+                    <input type="text" name="q" id="search-input" placeholder="Search universe... (/)" class="hud-search-input" aria-label="Search the web" autocomplete="off">
                 </form>
             </div>
-        </header>
+        </div>
+    </header>
 
-        <section class="center-content">
-            <div class="time-container" tabIndex="0" role="button" id="clock-btn" aria-label="Toggle 12/24 hour format">
-                <h1 id="clock">00:00</h1>
-                <p id="date">Loading date...</p>
+    <main class="console-body layer-ui">
+        <!-- Loading State Skeleton -->
+        <div id="loading-state" class="loading-container" aria-live="polite">
+            <div class="orbital-spinner">
+                <div class="ring-outer"></div>
+                <div class="ring-inner"></div>
+                <div class="core-dot"></div>
             </div>
-            <div class="greeting-container">
-                <h2 id="greeting">Welcome, Explorer.</h2>
+            <div class="loading-telemetry">
+                <span class="hud-label">ESTABLISHING CONNECTION</span>
+                <p id="loading-status">RECEIVING NASA TRANSMISSION...</p>
             </div>
-        </section>
+        </div>
 
-        <section class="bottom-content">
-            <div class="quick-links" id="quick-links" aria-label="Quick links bookmarks">
-                <!-- Links populated by JS -->
+        <!-- Error State Fallback -->
+        <div id="error-state" class="error-container hidden" role="alert">
+            <div class="error-panel glass-hud">
+                <div class="error-icon">
+                    <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+                </div>
+                <div class="error-badge">SIGNAL INTERRUPTED</div>
+                <h2 id="error-title">UNABLE TO RETRIEVE TRANSMISSION</h2>
+                <p id="error-message">Failed to connect to NASA's Astronomical Deep Space API. Check network or key setup.</p>
+                <div class="error-actions">
+                    <button type="button" id="retry-btn" class="hud-btn primary">RETRY TRANSMISSION</button>
+                </div>
             </div>
-            <button id="add-link-btn" class="glass-btn" aria-label="Add a quick link" title="Add quick link">
-                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
-            </button>
-        </section>
+        </div>
+
+        <!-- APOD Main Experience Content -->
+        <div id="apod-content" class="apod-experience hidden">
+            <!-- Hero Header Section -->
+            <section class="hero-section">
+                <div class="hero-eyebrow">
+                    <span class="pulse-dot"></span>
+                    <span class="eyebrow-text">NASA ASTRONOMY PICTURE OF THE DAY</span>
+                </div>
+                <h1 class="hero-headline">TODAY'S WINDOW INTO THE UNIVERSE</h1>
+                
+                <div class="apod-header-meta">
+                    <h2 id="apod-main-title" class="apod-title">Loading Cosmic Entry...</h2>
+                    <div class="meta-row">
+                        <span id="apod-main-date" class="date-badge">YYYY-MM-DD</span>
+                        <span id="apod-copyright-badge" class="copyright-badge hidden"></span>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Cinematic Media Stage Frame -->
+            <section class="stage-section">
+                <div class="media-frame-wrapper">
+                    <div class="media-frame glass-stage" id="media-stage">
+                        <!-- Image Container -->
+                        <div id="media-image-box" class="media-box hidden">
+                            <img id="apod-image" src="" alt="NASA Astronomy Picture of the Day" class="apod-img" loading="eager">
+                            <a id="hd-link" href="#" target="_blank" rel="noopener noreferrer" class="hd-badge-btn" title="Open Full Resolution NASA HD Image">
+                                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="15 3 21 3 21 9"/><polyline points="9 21 3 21 3 15"/><line x1="21" y1="3" x2="14" y2="10"/><line x1="3" y1="21" x2="10" y2="14"/></svg>
+                                <span>VIEW FULL HD</span>
+                            </a>
+                        </div>
+
+                        <!-- YouTube Iframe Video Box -->
+                        <div id="media-youtube-box" class="media-box video-aspect hidden">
+                            <iframe id="apod-youtube" src="" title="NASA Video APOD" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+                        </div>
+
+                        <!-- Direct MP4 / Video Box -->
+                        <div id="media-video-box" class="media-box video-aspect hidden">
+                            <video id="apod-video" controls poster="">
+                                <source id="apod-video-src" src="" type="video/mp4">
+                                Your browser does not support HTML5 video playback.
+                            </video>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Cosmic Data HUD & Telemetry Status -->
+            <section class="hud-telemetry-section">
+                <div class="hud-grid">
+                    <div class="hud-card glass-hud">
+                        <span class="hud-card-label">MEDIA TYPE</span>
+                        <span id="hud-media-type" class="hud-card-val">IMAGE</span>
+                    </div>
+                    <div class="hud-card glass-hud">
+                        <span class="hud-card-label">OBSERVATION DATE</span>
+                        <span id="hud-date" class="hud-card-val">2026-08-30</span>
+                    </div>
+                    <div class="hud-card glass-hud">
+                        <span class="hud-card-label">DATA SOURCE</span>
+                        <span class="hud-card-val">NASA APOD API</span>
+                    </div>
+                    <div class="hud-card glass-hud">
+                        <span class="hud-card-label">STATUS</span>
+                        <span class="hud-card-val status-ok">● RECORD RECEIVED</span>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Mission Log Information Panel -->
+            <section class="mission-log-section">
+                <div class="log-panel glass-hud">
+                    <div class="log-header">
+                        <div class="log-tag">
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg>
+                            <span>SCIENTIFIC MISSION LOG</span>
+                        </div>
+                        <span class="log-id" id="log-entry-id">ENTRY #APOD</span>
+                    </div>
+                    
+                    <div class="log-body">
+                        <p id="apod-explanation" class="explanation-text">Loading scientific breakdown from NASA's archive...</p>
+                    </div>
+                </div>
+            </section>
+        </div>
     </main>
 
-    <!-- Modal for adding links -->
-    <div id="link-modal" class="modal hidden" role="dialog" aria-labelledby="modal-title" aria-modal="true">
-        <div class="modal-content glass-panel">
-            <h3 id="modal-title">Add Quick Link</h3>
-            <form id="add-link-form">
-                <label for="link-title" class="sr-only">Title</label>
-                <input type="text" id="link-title" placeholder="Title (e.g. GitHub)" required autocomplete="off">
-                <label for="link-url" class="sr-only">URL</label>
-                <input type="url" id="link-url" placeholder="URL (https://...)" required autocomplete="off">
+    <!-- Date Archive Explorer Modal -->
+    <div id="archive-modal" class="modal hidden" role="dialog" aria-labelledby="archive-modal-title" aria-modal="true">
+        <div class="modal-content glass-hud">
+            <div class="modal-header">
+                <div class="hud-badge">TEMPORAL NAVIGATION</div>
+                <h3 id="archive-modal-title">EXPLORE NASA ARCHIVE</h3>
+                <p class="modal-sub">Select any date back to June 16, 1995 to retrieve past astronomical discoveries.</p>
+            </div>
+            
+            <form id="archive-form" class="archive-form">
+                <div class="date-input-wrap">
+                    <label for="archive-date-picker" class="sr-only">Target Observation Date</label>
+                    <input type="date" id="archive-date-picker" min="1995-06-16" class="hud-date-input" required>
+                </div>
                 <div class="modal-actions">
-                    <button type="button" id="cancel-link" class="glass-btn">Cancel</button>
-                    <button type="submit" class="glass-btn primary">Add Link</button>
+                    <button type="button" id="close-archive-btn" class="hud-btn">CANCEL</button>
+                    <button type="submit" class="hud-btn primary">JUMP TO DATE</button>
                 </div>
             </form>
         </div>
     </div>
 
-    <!-- Modal for APOD info -->
-    <div id="apod-modal" class="modal hidden" role="dialog" aria-labelledby="apod-modal-title" aria-modal="true">
-        <div class="modal-content glass-panel apod-details">
+    <!-- Mission / About Modal -->
+    <div id="about-modal" class="modal hidden" role="dialog" aria-labelledby="about-modal-title" aria-modal="true">
+        <div class="modal-content glass-hud">
             <div class="modal-header">
-                <span class="badge">Astronomy Picture of the Day</span>
-                <h3 id="apod-title">Title</h3>
-                <span id="apod-date" class="apod-date-badge"></span>
+                <div class="hud-badge">MISSION BRIEFING</div>
+                <h3 id="about-modal-title">COSMIC EXPERIENCE</h3>
             </div>
-            <p id="apod-desc">Description</p>
+            <div class="about-body">
+                <p><strong>COSMIC</strong> is a deep-space astronomical observation console bringing NASA's Astronomy Picture of the Day (APOD) to life through cinematic science and atmospheric design.</p>
+                <p>Every single day, NASA publishes a new image or video of our fascinating universe alongside explanations written by professional astronomers.</p>
+                <p class="tech-note">Built with Vanilla Web Technologies, Vite, HTML5 Canvas, and NASA Open APIs for the Hack Club Stardance Mission.</p>
+            </div>
             <div class="modal-actions">
-                <button type="button" id="close-apod" class="glass-btn primary">Close</button>
+                <button type="button" id="close-about-btn" class="hud-btn primary">CLOSE BRIEFING</button>
             </div>
         </div>
     </div>
+
+    <!-- Minimal Scientific Footer -->
+    <footer class="hud-footer layer-ui">
+        <div class="footer-left">
+            <span>COSMIC OBSERVER v2.0</span>
+            <span class="sep">|</span>
+            <span>POWERED BY NASA APOD API</span>
+        </div>
+        <div class="footer-right">
+            <a href="https://stardance.hackclub.com/missions/nasa-page" target="_blank" rel="noopener noreferrer" class="footer-link">HACK CLUB STARDANCE</a>
+            <span class="sep">|</span>
+            <a href="https://github.com/susantedit/Hack-club-stardance-Give-Your-Website-a-Pulse-" target="_blank" rel="noopener noreferrer" class="footer-link">GITHUB REPO</a>
+        </div>
+    </footer>
 
     <script type="module" src="/script.js"></script>
 </body>

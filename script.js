@@ -1,316 +1,392 @@
+/**
+ * NASA APOD — Cosmic Universe Experience
+ * Main Application Engine & Interactive System
+ */
+
 document.addEventListener('DOMContentLoaded', () => {
-    initStarfield();
+    initCosmicBackground();
     initClock();
-    initGreeting();
-    fetchNasaData();
-    initQuickLinks();
-    initModals();
+    initNavigation();
     initKeyboardShortcuts();
+    
+    // Load Today's Astronomical Transmission
+    loadAPOD();
 });
 
-// --- Starfield Particle Animation ---
-function initStarfield() {
-    const canvas = document.getElementById('starfield');
+// --- API Service Engine ---
+const API_BASE = 'https://api.nasa.gov/planetary/apod';
+
+/**
+ * Normalized APOD API Data Fetcher
+ * @param {string} [dateStr] - Optional YYYY-MM-DD date string
+ */
+async function getAPOD(dateStr = '') {
+    const apiKey = (typeof import.meta !== 'undefined' && import.meta.env && import.meta.env.VITE_NASA_API_KEY)
+        ? import.meta.env.VITE_NASA_API_KEY
+        : 'DEMO_KEY';
+
+    let url = `${API_BASE}?api_key=${apiKey}`;
+    if (dateStr) {
+        url += `&date=${dateStr}`;
+    }
+
+    const response = await fetch(url);
+    if (!response.ok) {
+        const errorData = await response.json().catch(() => ({}));
+        throw new Error(errorData.msg || errorData.error?.message || `NASA API returned status ${response.status}`);
+    }
+
+    const raw = await response.json();
+
+    // Determine normalized media type (Image, YouTube Video, Direct Video)
+    let normalizedMediaType = 'image';
+    if (raw.media_type === 'video') {
+        if (raw.url && (raw.url.includes('youtube.com') || raw.url.includes('youtu.be'))) {
+            normalizedMediaType = 'youtube';
+        } else {
+            normalizedMediaType = 'video';
+        }
+    }
+
+    return {
+        title: raw.title || 'Untitled Cosmic Discovery',
+        date: raw.date || new Date().toISOString().split('T')[0],
+        explanation: raw.explanation || 'No scientific explanation provided for this record.',
+        mediaType: normalizedMediaType,
+        rawMediaType: raw.media_type,
+        url: raw.url || '',
+        hdUrl: raw.hdurl || raw.url || '',
+        copyright: raw.copyright ? `© ${raw.copyright.trim()}` : ''
+    };
+}
+
+// --- APOD Renderer & Controller ---
+let currentAPOD = null;
+
+async function loadAPOD(dateStr = '') {
+    const loadingState = document.getElementById('loading-state');
+    const errorState = document.getElementById('error-state');
+    const apodContent = document.getElementById('apod-content');
+    const loadingStatus = document.getElementById('loading-status');
+
+    // UI Loading Transition
+    if (loadingStatus) loadingStatus.textContent = dateStr ? `RETRACTING ARCHIVE: ${dateStr}...` : 'RECEIVING NASA TRANSMISSION...';
+    loadingState.classList.remove('hidden');
+    errorState.classList.add('hidden');
+    apodContent.classList.add('hidden');
+
+    try {
+        const data = await getAPOD(dateStr);
+        currentAPOD = data;
+        renderAPOD(data);
+
+        // Transition Content In
+        loadingState.classList.add('hidden');
+        apodContent.classList.remove('hidden');
+    } catch (err) {
+        console.error('NASA APOD Transmission Failure:', err);
+        showError(err.message || 'Unable to establish orbital connection with NASA APOD.');
+    }
+}
+
+function renderAPOD(data) {
+    // Header & Titles
+    document.getElementById('apod-main-title').textContent = data.title;
+    document.getElementById('apod-main-date').textContent = formatDate(data.date);
+    document.getElementById('apod-explanation').textContent = data.explanation;
+    
+    // Copyright Badge
+    const copyrightBadge = document.getElementById('apod-copyright-badge');
+    if (data.copyright) {
+        copyrightBadge.textContent = data.copyright;
+        copyrightBadge.classList.remove('hidden');
+    } else {
+        copyrightBadge.classList.add('hidden');
+    }
+
+    // Telemetry HUD Grid
+    document.getElementById('hud-media-type').textContent = data.mediaType.toUpperCase();
+    document.getElementById('hud-date').textContent = data.date;
+    document.getElementById('log-entry-id').textContent = `ENTRY #${data.date.replace(/-/g, '')}`;
+
+    // Reset Media Frames
+    const imageBox = document.getElementById('media-image-box');
+    const youtubeBox = document.getElementById('media-youtube-box');
+    const videoBox = document.getElementById('media-video-box');
+
+    imageBox.classList.add('hidden');
+    youtubeBox.classList.add('hidden');
+    videoBox.classList.add('hidden');
+
+    // Render Triple Media States
+    if (data.mediaType === 'image') {
+        const img = document.getElementById('apod-image');
+        const hdLink = document.getElementById('hd-link');
+        
+        img.src = data.url;
+        img.alt = data.title;
+        hdLink.href = data.hdUrl;
+        
+        imageBox.classList.remove('hidden');
+    } else if (data.mediaType === 'youtube') {
+        const iframe = document.getElementById('apod-youtube');
+        
+        // Ensure YouTube embed format
+        let embedUrl = data.url;
+        if (!embedUrl.includes('embed')) {
+            const ytMatch = embedUrl.match(/(?:youtu\.be\/|youtube\.com\/(?:embed\/|v\/|watch\?v=|watch\?.+&v=))([\w-]{11})/);
+            if (ytMatch && ytMatch[1]) {
+                embedUrl = `https://www.youtube.com/embed/${ytMatch[1]}?autoplay=0`;
+            }
+        }
+        
+        iframe.src = embedUrl;
+        youtubeBox.classList.remove('hidden');
+    } else if (data.mediaType === 'video') {
+        const video = document.getElementById('apod-video');
+        const videoSrc = document.getElementById('apod-video-src');
+        
+        videoSrc.src = data.url;
+        video.load();
+        videoBox.classList.remove('hidden');
+    }
+}
+
+function showError(msg) {
+    const loadingState = document.getElementById('loading-state');
+    const errorState = document.getElementById('error-state');
+    const apodContent = document.getElementById('apod-content');
+    const errorMsg = document.getElementById('error-message');
+
+    loadingState.classList.add('hidden');
+    apodContent.classList.add('hidden');
+    if (errorMsg) errorMsg.textContent = msg;
+    errorState.classList.remove('hidden');
+}
+
+// --- Cosmic Background, Starfield Canvas & Parallax Engine ---
+function initCosmicBackground() {
+    const canvas = document.getElementById('starfield-canvas');
     if (!canvas) return;
     const ctx = canvas.getContext('2d');
     
-    let stars = [];
-    const starCount = 60;
+    // Check Reduced Motion Preference
+    const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    if (prefersReducedMotion) return;
 
-    function resize() {
+    let stars = [];
+    const starCount = window.innerWidth < 768 ? 120 : 260;
+
+    function resizeCanvas() {
         canvas.width = window.innerWidth;
         canvas.height = window.innerHeight;
-        createStars();
+        generateStars();
     }
 
-    function createStars() {
+    function generateStars() {
         stars = [];
         for (let i = 0; i < starCount; i++) {
             stars.push({
                 x: Math.random() * canvas.width,
                 y: Math.random() * canvas.height,
-                radius: Math.random() * 1.2 + 0.5,
-                alpha: Math.random() * 0.7 + 0.3,
-                speed: Math.random() * 0.005 + 0.002
+                radius: Math.random() * 1.3 + 0.3,
+                alpha: Math.random() * 0.8 + 0.2,
+                speed: Math.random() * 0.008 + 0.003
             });
         }
     }
 
-    function draw() {
+    function renderStarfield() {
         ctx.clearRect(0, 0, canvas.width, canvas.height);
+        
         stars.forEach(star => {
-            star.alpha += Math.sin(Date.now() * star.speed) * 0.01;
-            const currentAlpha = Math.max(0.1, Math.min(0.9, star.alpha));
-            
+            star.alpha += Math.sin(Date.now() * star.speed) * 0.008;
+            const alpha = Math.max(0.15, Math.min(0.95, star.alpha));
+
             ctx.beginPath();
             ctx.arc(star.x, star.y, star.radius, 0, Math.PI * 2);
-            ctx.fillStyle = `rgba(255, 255, 255, ${currentAlpha})`;
+            ctx.fillStyle = `rgba(255, 255, 255, ${alpha})`;
             ctx.fill();
         });
-        requestAnimationFrame(draw);
+
+        requestAnimationFrame(renderStarfield);
     }
 
-    window.addEventListener('resize', resize);
-    resize();
-    draw();
+    window.addEventListener('resize', resizeCanvas);
+    resizeCanvas();
+    renderStarfield();
+
+    // 3D Parallax Mouse Shift Engine
+    if (window.innerWidth > 768) {
+        const nebula = document.querySelector('.layer-nebula');
+        const planet1 = document.querySelector('.layer-planet-1');
+        const planet2 = document.querySelector('.layer-planet-2');
+
+        let mouseX = 0;
+        let mouseY = 0;
+        let targetX = 0;
+        let targetY = 0;
+
+        window.addEventListener('mousemove', (e) => {
+            mouseX = (e.clientX - window.innerWidth / 2) / (window.innerWidth / 2);
+            mouseY = (e.clientY - window.innerHeight / 2) / (window.innerHeight / 2);
+        });
+
+        function animateParallax() {
+            targetX += (mouseX - targetX) * 0.05;
+            targetY += (mouseY - targetY) * 0.05;
+
+            if (canvas) canvas.style.transform = `translate3d(${targetX * 12}px, ${targetY * 12}px, 0)`;
+            if (nebula) nebula.style.transform = `translate3d(${targetX * -25}px, ${targetY * -25}px, 0)`;
+            if (planet1) planet1.style.transform = `translate3d(${targetX * -40}px, ${targetY * -40}px, 0)`;
+            if (planet2) planet2.style.transform = `translate3d(${targetX * 20}px, ${targetY * 20}px, 0)`;
+
+            requestAnimationFrame(animateParallax);
+        }
+
+        animateParallax();
+    }
 }
 
-// --- Clock & Date (with 12h/24h toggle) ---
-let is24HourFormat = localStorage.getItem('nasaTab24h') === 'true';
+// --- Live Clock & Format Toggle ---
+let is24Hour = localStorage.getItem('cosmic_clock_24h') === 'true';
 
 function initClock() {
-    const clockEl = document.getElementById('clock');
-    const dateEl = document.getElementById('date');
     const clockBtn = document.getElementById('clock-btn');
+    const clockText = document.getElementById('hud-time');
 
-    function updateTime() {
+    function updateClock() {
         const now = new Date();
-        let hours = now.getHours();
-        let minutes = now.getMinutes();
-        
-        if (!is24HourFormat) {
+        let hours = now.getUTCHours();
+        let minutes = now.getUTCMinutes();
+        let seconds = now.getUTCSeconds();
+
+        if (!is24Hour) {
             hours = hours % 12 || 12;
         }
 
-        hours = hours < 10 ? '0' + hours : hours;
-        minutes = minutes < 10 ? '0' + minutes : minutes;
-        clockEl.textContent = `${hours}:${minutes}`;
+        const hStr = String(hours).padStart(2, '0');
+        const mStr = String(minutes).padStart(2, '0');
+        const sStr = String(seconds).padStart(2, '0');
 
-        const options = { weekday: 'long', month: 'long', day: 'numeric' };
-        dateEl.textContent = now.toLocaleDateString('en-US', options);
+        if (clockText) clockText.textContent = `${hStr}:${mStr}:${sStr}`;
     }
 
     if (clockBtn) {
         clockBtn.addEventListener('click', () => {
-            is24HourFormat = !is24HourFormat;
-            localStorage.setItem('nasaTab24h', is24HourFormat);
-            updateTime();
+            is24Hour = !is24Hour;
+            localStorage.setItem('cosmic_clock_24h', is24Hour);
+            updateClock();
         });
     }
 
-    updateTime();
-    setInterval(updateTime, 1000);
+    updateClock();
+    setInterval(updateClock, 1000);
 }
 
-// --- Greeting ---
-function initGreeting() {
-    const greetingEl = document.getElementById('greeting');
-    if (!greetingEl) return;
+// --- Navigation & Modals ---
+function initNavigation() {
+    // Nav Buttons
+    const navToday = document.getElementById('nav-today');
+    const navArchive = document.getElementById('nav-archive');
+    const navAbout = document.getElementById('nav-about');
 
-    const hour = new Date().getHours();
-    let greeting = 'Good evening, Explorer.';
+    // Modals
+    const archiveModal = document.getElementById('archive-modal');
+    const aboutModal = document.getElementById('about-modal');
+    const closeArchiveBtn = document.getElementById('close-archive-btn');
+    const closeAboutBtn = document.getElementById('close-about-btn');
+    const archiveForm = document.getElementById('archive-form');
+    const datePicker = document.getElementById('archive-date-picker');
+    const retryBtn = document.getElementById('retry-btn');
 
-    if (hour >= 5 && hour < 12) {
-        greeting = 'Good morning, Explorer.';
-    } else if (hour >= 12 && hour < 18) {
-        greeting = 'Good afternoon, Explorer.';
+    // Set Max Date Picker to Today
+    if (datePicker) {
+        datePicker.max = new Date().toISOString().split('T')[0];
+        datePicker.value = new Date().toISOString().split('T')[0];
     }
 
-    greetingEl.textContent = greeting;
-}
-
-// --- NASA APOD API Integration ---
-async function fetchNasaData() {
-    const nasaTitleEl = document.getElementById('nasa-title');
-    const bgContainer = document.getElementById('bg-container');
-    const apodTitleEl = document.getElementById('apod-title');
-    const apodDescEl = document.getElementById('apod-desc');
-    const apodDateEl = document.getElementById('apod-date');
-    
-    // Read API Key from Vite environment variables (falling back to DEMO_KEY)
-    const apiKey = (typeof import.meta !== 'undefined' && import.meta.env && import.meta.env.VITE_NASA_API_KEY) 
-        ? import.meta.env.VITE_NASA_API_KEY 
-        : 'DEMO_KEY';
-
-    try {
-        const response = await fetch(`https://api.nasa.gov/planetary/apod?api_key=${apiKey}`);
-        const data = await response.json();
-
-        if (data.media_type === 'image' && (data.hdurl || data.url)) {
-            bgContainer.style.backgroundImage = `url('${data.hdurl || data.url}')`;
-            if (nasaTitleEl) nasaTitleEl.textContent = data.title;
-            if (apodTitleEl) apodTitleEl.textContent = data.title;
-            if (apodDescEl) apodDescEl.textContent = data.explanation;
-            if (apodDateEl) apodDateEl.textContent = data.date;
-        } else {
-            fallbackBackground();
-        }
-    } catch (error) {
-        console.error('Failed to fetch NASA APOD:', error);
-        fallbackBackground();
-    }
-}
-
-function fallbackBackground() {
-    const bgContainer = document.getElementById('bg-container');
-    const nasaTitleEl = document.getElementById('nasa-title');
-    const apodTitleEl = document.getElementById('apod-title');
-    const apodDescEl = document.getElementById('apod-desc');
-
-    bgContainer.style.backgroundImage = `url('https://images.unsplash.com/photo-1451187580459-43490279c0fa?q=80&w=2072&auto=format&fit=crop')`;
-    if (nasaTitleEl) nasaTitleEl.textContent = 'Earth from Orbit (Cosmic View)';
-    if (apodTitleEl) apodTitleEl.textContent = 'Earth from Orbit';
-    if (apodDescEl) apodDescEl.textContent = 'A vibrant satellite capture of planet Earth showing atmospheric layers and night lights.';
-}
-
-// --- Quick Links (LocalStorage + Delete) ---
-const defaultLinks = [
-    { title: 'GitHub', url: 'https://github.com', icon: 'https://github.githubassets.com/favicons/favicon.svg' },
-    { title: 'Hack Club', url: 'https://hackclub.com', icon: 'https://assets.hackclub.com/icon-rounded.png' },
-    { title: 'YouTube', url: 'https://youtube.com', icon: 'https://www.youtube.com/s/desktop/100e4cd8/img/favicon_32x32.png' }
-];
-
-function initQuickLinks() {
-    const linksContainer = document.getElementById('quick-links');
-    let savedLinks = JSON.parse(localStorage.getItem('nasaTabLinks'));
-
-    if (!savedLinks || savedLinks.length === 0) {
-        savedLinks = defaultLinks;
-        localStorage.setItem('nasaTabLinks', JSON.stringify(savedLinks));
+    if (navToday) {
+        navToday.addEventListener('click', () => {
+            setActiveNav(navToday);
+            loadAPOD();
+        });
     }
 
-    renderLinks(savedLinks, linksContainer);
-}
+    if (navArchive) {
+        navArchive.addEventListener('click', () => {
+            archiveModal.classList.remove('hidden');
+            if (datePicker) datePicker.focus();
+        });
+    }
 
-function renderLinks(links, container) {
-    container.innerHTML = '';
-    links.forEach((link, index) => {
-        const wrapper = document.createElement('div');
-        wrapper.className = 'link-wrapper';
+    if (navAbout) {
+        navAbout.addEventListener('click', () => {
+            aboutModal.classList.remove('hidden');
+        });
+    }
 
-        const a = document.createElement('a');
-        a.href = link.url;
-        a.className = 'link-item';
-        a.title = link.title;
-        a.ariaLabel = link.title;
-        
-        let iconUrl = link.icon;
-        if (!iconUrl) {
-            try {
-                const domain = new URL(link.url).hostname;
-                iconUrl = `https://www.google.com/s2/favicons?domain=${domain}&sz=64`;
-            } catch(e) {
-                iconUrl = '';
-            }
-        }
+    if (closeArchiveBtn) {
+        closeArchiveBtn.addEventListener('click', () => archiveModal.classList.add('hidden'));
+    }
 
-        if (iconUrl) {
-            const img = document.createElement('img');
-            img.src = iconUrl;
-            img.alt = link.title;
-            img.onerror = () => {
-                img.style.display = 'none';
-                a.textContent = link.title.charAt(0).toUpperCase();
-            };
-            a.appendChild(img);
-        } else {
-            a.textContent = link.title.charAt(0).toUpperCase();
-        }
+    if (closeAboutBtn) {
+        closeAboutBtn.addEventListener('click', () => aboutModal.classList.add('hidden'));
+    }
 
-        // Delete button
-        const delBtn = document.createElement('button');
-        delBtn.className = 'delete-link-btn';
-        delBtn.innerHTML = '&times;';
-        delBtn.title = `Remove ${link.title}`;
-        delBtn.ariaLabel = `Remove ${link.title}`;
-        delBtn.addEventListener('click', (e) => {
+    if (retryBtn) {
+        retryBtn.addEventListener('click', () => loadAPOD());
+    }
+
+    if (archiveForm) {
+        archiveForm.addEventListener('submit', (e) => {
             e.preventDefault();
-            e.stopPropagation();
-            removeLink(index);
+            const selectedDate = datePicker.value;
+            if (selectedDate) {
+                archiveModal.classList.add('hidden');
+                setActiveNav(navArchive);
+                loadAPOD(selectedDate);
+            }
         });
+    }
 
-        wrapper.appendChild(a);
-        wrapper.appendChild(delBtn);
-        container.appendChild(wrapper);
+    // Modal Background Click Dismiss
+    window.addEventListener('click', (e) => {
+        if (e.target.classList.contains('modal')) {
+            e.target.classList.add('hidden');
+        }
     });
 }
 
-function addLink(title, url) {
-    let savedLinks = JSON.parse(localStorage.getItem('nasaTabLinks')) || [];
-    savedLinks.push({ title, url });
-    localStorage.setItem('nasaTabLinks', JSON.stringify(savedLinks));
-    initQuickLinks();
+function setActiveNav(targetBtn) {
+    document.querySelectorAll('.nav-link').forEach(btn => btn.classList.remove('active'));
+    if (targetBtn) targetBtn.classList.add('active');
 }
 
-function removeLink(index) {
-    let savedLinks = JSON.parse(localStorage.getItem('nasaTabLinks')) || [];
-    savedLinks.splice(index, 1);
-    localStorage.setItem('nasaTabLinks', JSON.stringify(savedLinks));
-    initQuickLinks();
-}
-
-// --- Keyboard Shortcuts & Modals ---
+// --- Keyboard Shortcuts ---
 function initKeyboardShortcuts() {
     const searchInput = document.getElementById('search-input');
     
     document.addEventListener('keydown', (e) => {
-        // Press '/' to focus search input if not typing in input
         if (e.key === '/' && document.activeElement.tagName !== 'INPUT') {
             e.preventDefault();
             if (searchInput) searchInput.focus();
         }
-        
-        // Press 'Escape' to close active modal
+
         if (e.key === 'Escape') {
             document.querySelectorAll('.modal').forEach(m => m.classList.add('hidden'));
         }
     });
 }
 
-function initModals() {
-    const addLinkBtn = document.getElementById('add-link-btn');
-    const linkModal = document.getElementById('link-modal');
-    const cancelLinkBtn = document.getElementById('cancel-link');
-    const addLinkForm = document.getElementById('add-link-form');
-
-    if (addLinkBtn) {
-        addLinkBtn.addEventListener('click', () => {
-            linkModal.classList.remove('hidden');
-            document.getElementById('link-title').focus();
-        });
-    }
-
-    if (cancelLinkBtn) {
-        cancelLinkBtn.addEventListener('click', () => {
-            linkModal.classList.add('hidden');
-            addLinkForm.reset();
-        });
-    }
-
-    if (addLinkForm) {
-        addLinkForm.addEventListener('submit', (e) => {
-            e.preventDefault();
-            const title = document.getElementById('link-title').value.trim();
-            const url = document.getElementById('link-url').value.trim();
-            
-            if (title && url) {
-                const formattedUrl = url.startsWith('http') ? url : `https://${url}`;
-                addLink(title, formattedUrl);
-                linkModal.classList.add('hidden');
-                addLinkForm.reset();
-            }
-        });
-    }
-
-    window.addEventListener('click', (e) => {
-        if (e.target.classList.contains('modal')) {
-            e.target.classList.add('hidden');
-        }
+// --- Helpers ---
+function formatDate(dateStr) {
+    if (!dateStr) return '';
+    const date = new Date(dateStr + 'T00:00:00Z');
+    return date.toLocaleDateString('en-US', {
+        year: 'numeric',
+        month: 'short',
+        day: 'numeric',
+        timeZone: 'UTC'
     });
-
-    const nasaInfo = document.getElementById('nasa-info');
-    const apodModal = document.getElementById('apod-modal');
-    const closeApodBtn = document.getElementById('close-apod');
-
-    if (nasaInfo) {
-        nasaInfo.addEventListener('click', () => {
-            apodModal.classList.remove('hidden');
-        });
-    }
-
-    if (closeApodBtn) {
-        closeApodBtn.addEventListener('click', () => {
-            apodModal.classList.add('hidden');
-        });
-    }
 }
