@@ -88,6 +88,26 @@ body {
     100% { transform: scale(0.96) translate(15px, -10px); opacity: 0.5; }
 }
 
+/* Deep Space Aurora Nebula Layer */
+.nebula-aurora {
+    position: absolute;
+    bottom: -15%;
+    right: -10%;
+    width: 65vw;
+    height: 65vw;
+    border-radius: 50%;
+    background: radial-gradient(circle at 50% 50%, rgba(160, 80, 255, 0.12) 0%, rgba(90, 40, 180, 0.08) 45%, transparent 75%);
+    filter: blur(85px);
+    animation: auroraGlow 40s ease-in-out infinite alternate;
+    pointer-events: none;
+}
+
+@keyframes auroraGlow {
+    0% { transform: scale(0.9) rotate(0deg); opacity: 0.4; }
+    50% { transform: scale(1.15) rotate(15deg); opacity: 0.75; }
+    100% { transform: scale(1) rotate(-10deg); opacity: 0.35; }
+}
+
 /* Subtle Orbital Ring Line */
 .orbital-ring {
     position: absolute;
@@ -96,30 +116,99 @@ body {
     width: 70vw;
     height: 70vw;
     border-radius: 50%;
-    border: 1px solid rgba(107, 140, 255, 0.05);
+    border: 1px solid rgba(121, 160, 255, 0.08);
     transform: rotateX(75deg) rotateY(-20deg);
     pointer-events: none;
 }
 
-/* Midground Distant Celestial Sphere */
-.midground-celestial {
+/* 3D Saturn Ringed Gas Giant Planet */
+.planet-saturn {
     position: absolute;
-    top: 35%;
-    left: 8%;
-    width: 90px;
-    height: 90px;
-    border-radius: 50%;
-    background: radial-gradient(circle at 35% 35%, rgba(100, 130, 200, 0.25) 0%, rgba(15, 22, 45, 0.6) 70%, rgba(2, 3, 6, 0.95) 100%);
-    box-shadow: inset -8px -8px 20px rgba(0, 0, 0, 0.9), 0 0 15px rgba(107, 140, 255, 0.04);
-    opacity: 0.35;
-    filter: blur(0.5px);
-    animation: celestialDrift 50s ease-in-out infinite alternate;
-    will-change: transform;
+    top: 12%;
+    right: 5%;
+    width: 240px;
+    height: 240px;
+    pointer-events: none;
+    animation: saturnFloat 45s ease-in-out infinite alternate;
 }
 
-@keyframes celestialDrift {
-    0% { transform: translateY(0) scale(1); }
-    100% { transform: translateY(-18px) scale(1.02); }
+@keyframes saturnFloat {
+    0% { transform: translateY(0) rotate(0deg); }
+    100% { transform: translateY(-22px) rotate(3deg); }
+}
+
+.saturn-body {
+    width: 140px;
+    height: 140px;
+    border-radius: 50%;
+    position: absolute;
+    top: 50px;
+    left: 50px;
+    background: radial-gradient(circle at 30% 30%, #a4b4e0 0%, #3e4e78 50%, #0d1428 90%);
+    box-shadow: inset -22px -22px 40px rgba(0, 0, 0, 0.92), 0 0 35px rgba(121, 160, 255, 0.15);
+    z-index: 2;
+}
+
+.saturn-ring-system {
+    position: absolute;
+    top: 20px;
+    left: -20px;
+    width: 280px;
+    height: 80px;
+    border-radius: 50%;
+    border: 14px solid rgba(140, 175, 255, 0.28);
+    border-top-color: rgba(220, 235, 255, 0.55);
+    border-bottom-color: rgba(90, 120, 200, 0.15);
+    transform: rotate(-28deg);
+    box-shadow: 0 0 25px rgba(121, 160, 255, 0.2);
+    z-index: 1;
+}
+
+/* Deep Space Plasma Sun Core */
+.star-plasma-sun {
+    position: absolute;
+    top: -100px;
+    left: -100px;
+    width: 320px;
+    height: 320px;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(121, 160, 255, 0.35) 0%, rgba(80, 120, 240, 0.12) 45%, transparent 70%);
+    box-shadow: 0 0 90px rgba(121, 160, 255, 0.25);
+    animation: sunPulse 25s ease-in-out infinite alternate;
+    pointer-events: none;
+}
+
+@keyframes sunPulse {
+    0% { transform: scale(1); opacity: 0.5; }
+    50% { transform: scale(1.12); opacity: 0.85; }
+    100% { transform: scale(0.95); opacity: 0.45; }
+}
+
+/* Orbiting Moon System */
+.moon-orbit-system {
+    position: absolute;
+    top: 48%;
+    left: 4%;
+    width: 260px;
+    height: 260px;
+    pointer-events: none;
+}
+
+.orbiting-moon {
+    width: 22px;
+    height: 22px;
+    border-radius: 50%;
+    background: radial-gradient(circle at 35% 35%, #e2ebff 0%, #7b8eb5 60%, #151d30 100%);
+    box-shadow: inset -4px -4px 8px rgba(0, 0, 0, 0.85), 0 0 10px rgba(220, 235, 255, 0.3);
+    animation: moonOrbit 35s linear infinite;
+    position: absolute;
+    top: 0;
+    left: 120px;
+}
+
+@keyframes moonOrbit {
+    0% { transform: rotate(0deg) translateX(120px) rotate(0deg); }
+    100% { transform: rotate(360deg) translateX(120px) rotate(-360deg); }
 }
 
 /* Celestial Bodies (Planetary Horizon & Gas Giant Sphere) */

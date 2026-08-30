@@ -6,6 +6,7 @@
 document.addEventListener('DOMContentLoaded', () => {
     initCosmicBackground();
     initClock();
+    initCosmicAudio();
     initNavigation();
     initKeyboardShortcuts();
     
@@ -497,6 +498,68 @@ function initCosmicBackground() {
 
 // --- Live Clock & Format Toggle ---
 let is24Hour = localStorage.getItem('cosmic_clock_24h') === 'true';
+
+// --- Web Audio API Cosmic Space Synth Drone Engine ---
+let audioCtx = null;
+let osc1 = null;
+let osc2 = null;
+let gainNode = null;
+let isAudioPlaying = false;
+
+function initCosmicAudio() {
+    const audioBtn = document.getElementById('audio-synth-btn');
+    const audioText = document.getElementById('audio-status-text');
+    if (!audioBtn) return;
+
+    audioBtn.addEventListener('click', () => {
+        if (!audioCtx) {
+            const AudioContext = window.AudioContext || window.webkitAudioContext;
+            if (!AudioContext) return;
+            audioCtx = new AudioContext();
+
+            // Sub-bass drone oscillator (55Hz - Low A note)
+            osc1 = audioCtx.createOscillator();
+            osc1.type = 'sine';
+            osc1.frequency.setValueAtTime(55, audioCtx.currentTime);
+
+            // Warm resonant harmonic oscillator (110Hz)
+            osc2 = audioCtx.createOscillator();
+            osc2.type = 'sine';
+            osc2.frequency.setValueAtTime(110, audioCtx.currentTime);
+
+            // Master Gain Node for smooth fade
+            gainNode = audioCtx.createGain();
+            gainNode.gain.setValueAtTime(0.001, audioCtx.currentTime);
+
+            osc1.connect(gainNode);
+            osc2.connect(gainNode);
+            gainNode.connect(audioCtx.destination);
+
+            osc1.start();
+            osc2.start();
+        }
+
+        if (audioCtx.state === 'suspended') {
+            audioCtx.resume();
+        }
+
+        if (!isAudioPlaying) {
+            gainNode.gain.cancelScheduledValues(audioCtx.currentTime);
+            gainNode.gain.setValueAtTime(gainNode.gain.value, audioCtx.currentTime);
+            gainNode.gain.exponentialRampToValueAtTime(0.08, audioCtx.currentTime + 1.5);
+            isAudioPlaying = true;
+            if (audioText) audioText.textContent = 'AUDIO ON';
+            audioBtn.classList.add('audio-active');
+        } else {
+            gainNode.gain.cancelScheduledValues(audioCtx.currentTime);
+            gainNode.gain.setValueAtTime(gainNode.gain.value, audioCtx.currentTime);
+            gainNode.gain.exponentialRampToValueAtTime(0.0001, audioCtx.currentTime + 1.2);
+            isAudioPlaying = false;
+            if (audioText) audioText.textContent = 'AUDIO OFF';
+            audioBtn.classList.remove('audio-active');
+        }
+    });
+}
 
 function initClock() {
     const clockBtn = document.getElementById('clock-btn');

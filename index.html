@@ -36,10 +36,21 @@
     <div class="space-viewport" id="space-viewport">
         <canvas id="starfield-canvas"></canvas>
         <div class="nebula-layer layer-nebula"></div>
+        <div class="nebula-aurora layer-aurora"></div>
         <div class="orbital-ring layer-orbital"></div>
-        <div class="midground-celestial layer-midground"></div>
+        
+        <!-- 3D Planets & Star Systems -->
         <div class="planet-giant layer-planet-1"></div>
+        <div class="planet-saturn layer-planet-saturn">
+            <div class="saturn-body"></div>
+            <div class="saturn-ring-system"></div>
+        </div>
+        <div class="star-plasma-sun layer-plasma-sun"></div>
         <div class="planet-horizon layer-planet-2"></div>
+        <div class="moon-orbit-system layer-moon">
+            <div class="orbiting-moon"></div>
+        </div>
+        
         <div class="space-overlay"></div>
     </div>
 
@@ -64,6 +75,10 @@
         </nav>
 
         <div class="header-right">
+            <button type="button" id="audio-synth-btn" class="hud-clock-badge audio-btn" title="Toggle Cosmic Space Audio Synth" tabindex="0" aria-label="Toggle Cosmic Audio">
+                <span class="hud-clock-icon">🔊</span>
+                <span id="audio-status-text">AUDIO ON</span>
+            </button>
             <button type="button" id="clock-btn" class="hud-clock-badge" title="Click to toggle UTC 12h / 24h format" tabindex="0">
                 <span class="hud-clock-icon">🕒</span>
                 <span id="hud-time">00:00:00 UTC</span>
