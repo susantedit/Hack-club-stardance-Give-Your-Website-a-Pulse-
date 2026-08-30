@@ -11,64 +11,72 @@
 </head>
 <body>
     <div class="background-container" id="bg-container">
-        <!-- Background image will be set here dynamically -->
+        <!-- Background image set dynamically -->
+        <canvas id="starfield"></canvas>
         <div class="overlay"></div>
     </div>
 
     <main class="content-wrapper">
         <header class="top-bar">
-            <div class="nasa-info" id="nasa-info">
-                <span class="loading">Fetching universe...</span>
-            </div>
+            <button class="nasa-info-btn glass-panel-sm" id="nasa-info" aria-label="View NASA Astronomy Picture of the Day details">
+                <div class="badge">NASA APOD</div>
+                <p id="nasa-title" class="nasa-title">Loading image data...</p>
+            </button>
             <div class="search-container">
-                <form id="search-form" action="https://www.google.com/search" method="GET">
-                    <input type="text" name="q" placeholder="Search the web..." class="search-input" autofocus>
+                <form id="search-form" action="https://www.google.com/search" method="GET" role="search">
+                    <input type="text" name="q" id="search-input" placeholder="Search the web... (Press '/')" class="search-input" aria-label="Search the web via Google" autofocus>
                 </form>
             </div>
         </header>
 
         <section class="center-content">
-            <div class="time-container">
+            <div class="time-container" tabIndex="0" role="button" id="clock-btn" aria-label="Toggle 12/24 hour format">
                 <h1 id="clock">00:00</h1>
                 <p id="date">Loading date...</p>
             </div>
             <div class="greeting-container">
-                <h2 id="greeting">Good day, Explorer.</h2>
+                <h2 id="greeting">Welcome, Explorer.</h2>
             </div>
         </section>
 
         <section class="bottom-content">
-            <div class="quick-links" id="quick-links">
-                <!-- Links will be populated by JS -->
+            <div class="quick-links" id="quick-links" aria-label="Quick links bookmarks">
+                <!-- Links populated by JS -->
             </div>
-            <button id="add-link-btn" class="glass-btn" title="Add quick link">
-                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
+            <button id="add-link-btn" class="glass-btn" aria-label="Add a quick link" title="Add quick link">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
             </button>
         </section>
     </main>
 
     <!-- Modal for adding links -->
-    <div id="link-modal" class="modal hidden">
+    <div id="link-modal" class="modal hidden" role="dialog" aria-labelledby="modal-title" aria-modal="true">
         <div class="modal-content glass-panel">
-            <h3>Add Quick Link</h3>
+            <h3 id="modal-title">Add Quick Link</h3>
             <form id="add-link-form">
-                <input type="text" id="link-title" placeholder="Title (e.g. GitHub)" required>
-                <input type="url" id="link-url" placeholder="URL (https://...)" required>
+                <label for="link-title" class="sr-only">Title</label>
+                <input type="text" id="link-title" placeholder="Title (e.g. GitHub)" required autocomplete="off">
+                <label for="link-url" class="sr-only">URL</label>
+                <input type="url" id="link-url" placeholder="URL (https://...)" required autocomplete="off">
                 <div class="modal-actions">
                     <button type="button" id="cancel-link" class="glass-btn">Cancel</button>
-                    <button type="submit" class="glass-btn primary">Add</button>
+                    <button type="submit" class="glass-btn primary">Add Link</button>
                 </div>
             </form>
         </div>
     </div>
 
     <!-- Modal for APOD info -->
-    <div id="apod-modal" class="modal hidden">
+    <div id="apod-modal" class="modal hidden" role="dialog" aria-labelledby="apod-modal-title" aria-modal="true">
         <div class="modal-content glass-panel apod-details">
-            <h3 id="apod-title">Title</h3>
+            <div class="modal-header">
+                <span class="badge">Astronomy Picture of the Day</span>
+                <h3 id="apod-title">Title</h3>
+                <span id="apod-date" class="apod-date-badge"></span>
+            </div>
             <p id="apod-desc">Description</p>
             <div class="modal-actions">
-                <button type="button" id="close-apod" class="glass-btn">Close</button>
+                <button type="button" id="close-apod" class="glass-btn primary">Close</button>
             </div>
         </div>
     </div>
