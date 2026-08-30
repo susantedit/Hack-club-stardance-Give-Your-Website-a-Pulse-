@@ -7,7 +7,8 @@ A custom, cinematic deep-space observation dashboard built for the [Hack Club St
 
 Built with **Vite**, **Vanilla JS**, **Glassmorphism CSS**, **NASA APOD API**, and automated **GitHub Actions CI/CD deployment**.
 
-🌐 **Live Website**: [https://susantedit.github.io/Hack-club-stardance-Give-Your-Website-a-Pulse-/](https://susantedit.github.io/Hack-club-stardance-Give-Your-Website-a-Pulse-/)
+🌐 **Live Website**: [https://susantedit.github.io/Hack-club-stardance-Give-Your-Website-a-Pulse-/](https://susantedit.github.io/Hack-club-stardance-Give-Your-Website-a-Pulse-/)  
+📝 **Development Log**: [DEVLOG.md](DEVLOG.md)
 
 ---
 
