@@ -4,49 +4,95 @@
  */
 
 function initSolarSystem() {
-    const toggle3DBtn = document.getElementById('toggle-3d-btn');
-    const toggleZoomBtn = document.getElementById('toggle-zoom-btn');
-    const viewport = document.getElementById('universe-viewport');
-    const planetBtns = document.querySelectorAll('.planet-btn');
+    const solarExperience = document.getElementById('solar-content');
+    const universe = document.getElementById('universe');
+    const solarSystem = document.getElementById('solar-system');
+    const dataLinks = document.querySelectorAll('#data a');
+    const toggleDataBtn = document.getElementById('toggle-data-btn');
+    const toggleControlsBtn = document.getElementById('toggle-controls-btn');
+    
+    const ctrlViewCheck = document.getElementById('ctrl-view-check');
+    const ctrlZoomCheck = document.getElementById('ctrl-zoom-check');
+    
+    const setSpeedRadio = document.querySelector('.set-speed');
+    const setSizeRadio = document.querySelector('.set-size');
+    const setDistanceRadio = document.querySelector('.set-distance');
 
-    if (toggle3DBtn && viewport) {
-        toggle3DBtn.addEventListener('click', () => {
-            if (viewport.classList.contains('view-3D')) {
-                viewport.classList.remove('view-3D');
-                viewport.classList.add('view-2D');
-                toggle3DBtn.textContent = '2D VIEW';
-                toggle3DBtn.classList.remove('active');
-            } else {
-                viewport.classList.remove('view-2D');
-                viewport.classList.add('view-3D');
-                toggle3DBtn.textContent = '3D VIEW';
-                toggle3DBtn.classList.add('active');
-            }
+    if (!solarExperience) return;
+
+    // Toggle Data Panel
+    if (toggleDataBtn) {
+        toggleDataBtn.addEventListener('click', () => {
+            solarExperience.classList.toggle('data-open');
+            solarExperience.classList.toggle('data-close');
+            toggleDataBtn.classList.toggle('active');
         });
     }
 
-    if (toggleZoomBtn && viewport) {
-        toggleZoomBtn.addEventListener('click', () => {
-            if (viewport.classList.contains('zoom-large')) {
-                viewport.classList.remove('zoom-large');
-                viewport.classList.add('zoom-close');
-                toggleZoomBtn.textContent = 'ZOOM FAR';
-                toggleZoomBtn.classList.add('active');
-            } else {
-                viewport.classList.remove('zoom-close');
-                viewport.classList.add('zoom-large');
-                toggleZoomBtn.textContent = 'ZOOM CLOSE';
-                toggleZoomBtn.classList.remove('active');
-            }
+    // Toggle Controls Panel
+    if (toggleControlsBtn) {
+        toggleControlsBtn.addEventListener('click', () => {
+            solarExperience.classList.toggle('controls-open');
+            solarExperience.classList.toggle('controls-close');
+            toggleControlsBtn.classList.toggle('active');
         });
     }
 
-    planetBtns.forEach(btn => {
-        btn.addEventListener('click', () => {
-            planetBtns.forEach(b => b.classList.remove('active'));
-            btn.classList.add('active');
+    // Planet Selection Link Clicks
+    dataLinks.forEach(link => {
+        link.addEventListener('click', (e) => {
+            e.preventDefault();
+            const planetClass = link.getAttribute('class').replace(' active', '');
+            if (solarSystem) {
+                solarSystem.className = planetClass;
+            }
+            dataLinks.forEach(l => l.classList.remove('active'));
+            link.classList.add('active');
         });
     });
+
+    // View 2D / 3D Toggle
+    if (ctrlViewCheck) {
+        ctrlViewCheck.addEventListener('change', () => {
+            if (solarExperience.classList.contains('view-3D')) {
+                solarExperience.classList.remove('view-3D');
+                solarExperience.classList.add('view-2D');
+            } else {
+                solarExperience.classList.remove('view-2D');
+                solarExperience.classList.add('view-3D');
+            }
+        });
+    }
+
+    // Zoom Large / Close Toggle
+    if (ctrlZoomCheck) {
+        ctrlZoomCheck.addEventListener('change', () => {
+            if (solarExperience.classList.contains('zoom-large')) {
+                solarExperience.classList.remove('zoom-large');
+                solarExperience.classList.add('zoom-close');
+            } else {
+                solarExperience.classList.remove('zoom-close');
+                solarExperience.classList.add('zoom-large');
+            }
+        });
+    }
+
+    // Scale Controls (Speed, Size, Distance)
+    const setScale = (scaleClass) => {
+        if (universe) {
+            universe.className = scaleClass;
+        }
+    };
+
+    if (setSpeedRadio) {
+        setSpeedRadio.addEventListener('change', () => setScale('scale-stretched set-speed'));
+    }
+    if (setSizeRadio) {
+        setSizeRadio.addEventListener('change', () => setScale('scale-s set-size'));
+    }
+    if (setDistanceRadio) {
+        setDistanceRadio.addEventListener('change', () => setScale('scale-d set-distance'));
+    }
 }
 
 document.addEventListener('DOMContentLoaded', () => {
