@@ -1,0 +1,1 @@
+COSMORA is a deep-space new tab dashboard & observation deck for the Hack Club Stardance Mission. Features daily NASA APOD, 3D CSS planetary orbits, real-time lunar ephemeris, ISS telemetry, custom shortcuts, persistent task tracker, auto-saving notes, and a Web Audio ambient cosmic synthesizer.
