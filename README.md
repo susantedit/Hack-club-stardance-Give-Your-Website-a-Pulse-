@@ -1,35 +1,3 @@
-# 👋 Hey, I'm Kantaraj Luitel (Susant)
-<img align="right" alt="Coding" width="380" src="https://cdn.dribbble.com/users/1019864/screenshots/3079099/codeloop.gif" >
-
-💻 **Developer** • 🔐 **Cybersecurity Enthusiast** • 🎬 **Content Creator** • 🏆 **Hackathon Winner**  
-📍 *Nepal 🇳🇵*
-
-🚀 *Building cool things with code while exploring AI, Generative AI, and Cybersecurity.*
-
----
-
-## 🌐 Connect With Me:
-[![GitHub](https://img.shields.io/badge/GitHub-181717.svg?style=for-the-badge&logo=github&logoColor=white)](https://github.com/susantedit)
-[![LinkedIn](https://img.shields.io/badge/LinkedIn-%230077B5.svg?style=for-the-badge&logo=linkedin&logoColor=white)](https://linkedin.com/in/kantaraj-luitel)
-[![Instagram](https://img.shields.io/badge/Instagram-%23E4405F.svg?style=for-the-badge&logo=Instagram&logoColor=white)](https://instagram.com/susantgamerz)
-[![X / Twitter](https://img.shields.io/badge/X-black.svg?style=for-the-badge&logo=X&logoColor=white)](https://x.com/Susantedit)
-[![Facebook](https://img.shields.io/badge/Facebook-%231877F2.svg?style=for-the-badge&logo=Facebook&logoColor=white)](https://facebook.com/Kantaraj.Luitel)
-[![Pinterest](https://img.shields.io/badge/Pinterest-%23E60023.svg?style=for-the-badge&logo=Pinterest&logoColor=white)](https://pinterest.com/susantluitel)
-[![Reddit](https://img.shields.io/badge/Reddit-%23FF4500.svg?style=for-the-badge&logo=Reddit&logoColor=white)](https://reddit.com/user/Successful-Twist2608)
-[![TikTok](https://img.shields.io/badge/TikTok-%23000000.svg?style=for-the-badge&logo=TikTok&logoColor=white)](https://tiktok.com/@vortexeditz34)
-[![CodePen](https://img.shields.io/badge/CodePen-white?style=for-the-badge&logo=codepen&logoColor=black)](https://codepen.io/susant-gamerz)
-[![WhatsApp](https://img.shields.io/badge/WhatsApp-25D366?style=for-the-badge&logo=whatsapp&logoColor=white)](https://wa.me/9779708838261)
-[![Email](https://img.shields.io/badge/Email-D14836?style=for-the-badge&logo=gmail&logoColor=white)](mailto:susantedit@gmail.com)
-
----
-
-## ☕ Support My Work:
-[![Buy Me A Coffee](https://img.shields.io/badge/Buy%20Me%20a%20Coffee-ffdd00?style=for-the-badge&logo=buy-me-a-coffee&logoColor=black)](https://buymeacoffee.com/Susantedit)
-
----
-
-<br>
-
 <div align="center">
   <img src="./COSMORA.png" alt="COSMORA Logo" width="160" style="border-radius: 24px; box-shadow: 0 0 40px rgba(121,160,255,0.4);" />
   <h1>🪐 COSMORA</h1>
@@ -51,7 +19,7 @@
 
 **COSMORA** is an astronomical new tab dashboard and deep-space observation workstation built for the **[Hack Club Stardance Mission](https://stardance.hackclub.com/missions/nasa-page)**.
 
-Instead of opening a plain, boring browser new tab, **COSMORA** transforms your screen into a spacecraft observation deck looking into deep space. It brings together NASA's Astronomy Picture of the Day (APOD), full-bleed 3D CSS planetary orbits, real-time mathematical lunar ephemeris, live ISS telemetry tracking, developer quick-launch shortcuts, interactive task managers, and auto-saving scratchpads into one unified interface.
+Instead of opening a plain browser new tab, **COSMORA** transforms your screen into a spacecraft observation deck looking into deep space. It brings together NASA's Astronomy Picture of the Day (APOD), full-bleed 3D CSS planetary orbits, real-time mathematical lunar ephemeris, live ISS telemetry tracking, developer quick-launch shortcuts, interactive task managers, and auto-saving scratchpads into one unified interface.
 
 ---
 
@@ -75,7 +43,7 @@ Instead of opening a plain, boring browser new tab, **COSMORA** transforms your 
 
 ### 3. 📅 Deep Space Archive Explorer (`ARCHIVE`)
 - Interactive date selector allowing users to time-travel back to any day in astronomical history since NASA APOD's inception on **June 16, 1995**.
-- Intelligent caching layer to ensure instant instant retrieval and zero redundant API calls.
+- Intelligent caching layer to ensure instant retrieval and zero redundant API calls.
 
 ### 4. 🌌 Full-Bleed 3D Planetary Orbits (`3D ORBITS`)
 - Integrated 3D CSS Solar System simulation spanning full viewport width (`100vw`).
@@ -165,17 +133,11 @@ The optimized production bundle will be generated in the `dist/` directory.
 
 ---
 
-## 👨‍💻 Author & Creator
+## 👨‍💻 Author
 
 **Kantaraj Luitel (Susant)**
-- 📍 Kathmandu, Nepal 🇳🇵
-- 🎓 *Oracle Cloud Certified Generative AI Professional*
-- 🎓 *Oracle Cloud Infrastructure 2024 AI Foundations Associate*
-- 🔐 *APIsec Certified Practitioner*
-- 🏆 *2nd Place - Campfire Kathmandu 2026 (Hack Club)*
-- 🌐 GitHub: [@susantedit](https://github.com/susantedit)
-- 💼 LinkedIn: [kantaraj-luitel](https://linkedin.com/in/kantaraj-luitel)
-- ☕ Buy Me a Coffee: [Susantedit](https://buymeacoffee.com/Susantedit)
+- GitHub: [@susantedit](https://github.com/susantedit)
+- LinkedIn: [kantaraj-luitel](https://linkedin.com/in/kantaraj-luitel)
 
 ---
 
@@ -186,6 +148,6 @@ This project is licensed under the **MIT License** — see the [LICENSE](./LICEN
 ---
 
 <div align="center">
-  <p>Built with ❤️ and celestial curiosity for the <strong>Hack Club Stardance Mission</strong>.</p>
+  <p>Built with ❤️ for the <strong>Hack Club Stardance Mission</strong>.</p>
   <p><em>COSMIC OBSERVER v2.0 • POWERED BY NASA APOD API</em></p>
 </div>
