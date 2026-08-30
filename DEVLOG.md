@@ -3,7 +3,11 @@
 > *"Somewhere in the cosmos, something is waiting."*  
 > *"The universe is closer than you think."*
 
-Welcome to the official development log for **COSMORA**, a custom deep-space astronomical observation dashboard built for the [Hack Club Stardance Mission](https://stardance.hackclub.com/missions/nasa-page).
+Welcome to the official development log for **COSMORA**, a custom deep-space astronomical observation dashboard created by **[Kantaraj Luitel (Susant)](https://github.com/susantedit)** for the [Hack Club Stardance Mission](https://stardance.hackclub.com/missions/nasa-page).
+
+- 👨‍💻 **Developer**: Kantaraj Luitel (Susant) (Nepal 🇳🇵)
+- 🌐 **Portfolio/GitHub**: [https://github.com/susantedit](https://github.com/susantedit)
+- ☕ **Support/Donate**: [Buy Me a Coffee](https://buymeacoffee.com/Susantedit)
 
 ---
 

@@ -4,12 +4,13 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>COSMORA — Somewhere in the cosmos, something is waiting.</title>
-    <meta name="description" content="COSMORA — Somewhere in the cosmos, something is waiting. The universe is closer than you think. An immersive deep-space observation console for NASA's Astronomy Picture of the Day.">
+    <meta name="description" content="COSMORA — Deep space astronomical observation console & minimal new tab dashboard created by Kantaraj Luitel (Susant).">
+    <meta name="author" content="Kantaraj Luitel (Susant)">
     <meta name="theme-color" content="#030408">
     
     <!-- Open Graph Metadata -->
-    <meta property="og:title" content="COSMORA — Somewhere in the cosmos, something is waiting.">
-    <meta property="og:description" content="The universe is closer than you think. Explore daily NASA APOD discoveries in deep space.">
+    <meta property="og:title" content="COSMORA — Created by Kantaraj Luitel (Susant)">
+    <meta property="og:description" content="The universe is closer than you think. Explore daily NASA APOD discoveries & minimal new tab dashboard. Created by Kantaraj Luitel (Susant).">
     <meta property="og:type" content="website">
     <meta property="og:url" content="https://susantedit.github.io/Hack-club-stardance-Give-Your-Website-a-Pulse-/">
     <meta property="og:site_name" content="COSMORA">
@@ -17,17 +18,19 @@
     
     <!-- Twitter Card Metadata -->
     <meta name="twitter:card" content="summary_large_image">
-    <meta name="twitter:title" content="COSMORA — Somewhere in the cosmos, something is waiting.">
-    <meta name="twitter:description" content="The universe is closer than you think. Daily NASA APOD deep space console.">
+    <meta name="twitter:creator" content="@Susantedit">
+    <meta name="twitter:title" content="COSMORA — Created by Kantaraj Luitel (Susant)">
+    <meta name="twitter:description" content="Daily NASA APOD deep space console & minimal new tab dashboard.">
     <meta name="twitter:image" content="/COSMORA.png">
     
-    <!-- Crisp Vector SVG Favicon -->
-    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%2379a0ff' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><circle cx='12' cy='12' r='9'/><ellipse cx='12' cy='12' rx='10' ry='4' transform='rotate(-30 12 12)'/></svg>">
+    <!-- Official COSMORA Logo Favicon -->
+    <link rel="icon" type="image/png" href="./COSMORA.png">
+    <link rel="apple-touch-icon" href="./COSMORA.png">
 
-    <!-- Deep Space Typography -->
+    <!-- Deep Space Celestial & Editorial Typography -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@600;800;900&family=Outfit:wght@300;400;500;600&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600;700;800&family=Cormorant+Garamond:ital,wght@0,400;0,600;1,400;1,600&family=Manrope:wght@400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="/style.css">
 </head>
 <body>
@@ -69,7 +72,8 @@
         </div>
 
         <nav class="header-nav" aria-label="Main Navigation">
-            <button type="button" id="nav-today" class="nav-link active" tabindex="0">TODAY</button>
+            <button type="button" id="nav-home" class="nav-link active" tabindex="0">HOME</button>
+            <button type="button" id="nav-today" class="nav-link" tabindex="0">TODAY</button>
             <button type="button" id="nav-archive" class="nav-link" tabindex="0">ARCHIVE</button>
             <button type="button" id="nav-solar" class="nav-link" tabindex="0">3D ORBITS</button>
             <button type="button" id="nav-about" class="nav-link" tabindex="0">MISSION</button>
@@ -77,11 +81,11 @@
 
         <div class="header-right">
             <button type="button" id="audio-synth-btn" class="hud-clock-badge audio-btn" title="Toggle Cosmic Space Audio Synth" tabindex="0" aria-label="Toggle Cosmic Audio">
-                <span class="hud-clock-icon">🔊</span>
+                <svg class="hud-svg-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M19.07 4.93a10 10 0 0 1 0 14.14"/><path d="M15.54 8.46a5 5 0 0 1 0 7.07"/></svg>
                 <span id="audio-status-text">AUDIO ON</span>
             </button>
             <button type="button" id="clock-btn" class="hud-clock-badge" title="Click to toggle UTC 12h / 24h format" tabindex="0">
-                <span class="hud-clock-icon">🕒</span>
+                <svg class="hud-svg-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
                 <span id="hud-time">00:00:00 UTC</span>
             </button>
             <form id="search-form" action="https://www.google.com/search" method="GET" role="search">
@@ -91,8 +95,8 @@
     </header>
 
     <main class="console-body layer-ui">
-        <!-- Cosmic Orbital Loading State (CLS Preserved Skeleton) -->
-        <div id="loading-state" class="loading-container">
+        <!-- Cosmic Orbital Loading State (Hidden on Home by default) -->
+        <div id="loading-state" class="loading-container hidden">
             <div class="orbital-loader">
                 <div class="loader-ring ring-outer"></div>
                 <div class="loader-ring ring-inner"></div>
@@ -127,7 +131,193 @@
             </div>
         </div>
 
-        <!-- APOD Main Experience Content -->
+        <!-- Minimal New Tab Home Dashboard Page (Default Landing View) -->
+        <div id="home-content" class="home-experience">
+            <!-- Dashboard Centerpiece: Giant Digital Clock & Google Search Bar -->
+            <section class="dashboard-centerpiece reveal-element active">
+                <div class="centerpiece-clock">
+                    <h1 id="home-clock-time" class="home-clock">10:46 AM</h1>
+                    <p id="home-clock-date" class="home-date">Sunday, August 30, 2026</p>
+                </div>
+                <form id="home-search-form" class="home-search-bar" action="https://www.google.com/search" method="GET" role="search">
+                    <div class="search-input-wrapper">
+                        <svg class="search-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+                        <input type="text" name="q" id="home-search-input" placeholder="Search with Google..." class="home-search-input" autocomplete="off">
+                        <button type="submit" class="home-search-btn">Google</button>
+                    </div>
+                </form>
+            </section>
+
+            <!-- Bento Grid Dashboard Widgets -->
+            <section class="dashboard-bento-section reveal-element active">
+                <div class="dashboard-bento-grid">
+                    
+                    <!-- Card 1: Latest Tech & Cosmic News -->
+                    <div class="bento-card glass-widget news-widget">
+                        <div class="widget-header">
+                            <span class="widget-title">
+                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+                                LATEST COSMIC NEWS
+                            </span>
+                            <span class="widget-badge">ASTRONOMY</span>
+                        </div>
+                        <div class="widget-news-body">
+                            <div class="news-img-frame">
+                                <img id="widget-news-img" src="/COSMORA.png" alt="Cosmic Discovery Preview">
+                                <span id="widget-news-badge" class="news-tag">DAILY APOD</span>
+                            </div>
+                            <h4 id="widget-news-title" class="news-title">Loading Cosmic Feature...</h4>
+                            <p id="widget-news-excerpt" class="news-excerpt">NASA's daily astronomical feature transmission.</p>
+                            <button type="button" id="view-today-apod-btn" class="hud-btn secondary small-btn" style="margin-top: 8px; width: 100%; border-radius: 8px; font-size: 0.75rem; padding: 6px 12px; font-family: 'Space Grotesk', sans-serif;">Explore Full Transmission →</button>
+                        </div>
+                    </div>
+
+                    <!-- Card 2: Custom Shortcuts Hub -->
+                    <div class="bento-card glass-widget shortcuts-widget">
+                        <div class="widget-header">
+                            <span class="widget-title">
+                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
+                                SHORTCUTS
+                            </span>
+                            <div class="widget-actions">
+                                <button type="button" id="add-shortcut-btn" class="icon-btn" title="Add Shortcut" tabindex="0">+</button>
+                            </div>
+                        </div>
+                        <div class="widget-shortcuts-body">
+                            <div id="shortcuts-grid" class="shortcuts-grid">
+                                <!-- Dynamic Shortcuts render here -->
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Card 3: Daily Task Tracker (To-Do List) -->
+                    <div class="bento-card glass-widget tasks-widget">
+                        <div class="widget-header">
+                            <span id="widget-task-date" class="widget-title">
+                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+                                TODAY'S TASKS
+                            </span>
+                        </div>
+                        <div class="widget-tasks-body">
+                            <form id="task-input-form" class="task-form">
+                                <input type="text" id="task-input" placeholder="+ Add a task..." class="task-input" autocomplete="off">
+                            </form>
+                            <ul id="tasks-list" class="tasks-list">
+                                <!-- Dynamic Tasks render here -->
+                            </ul>
+                        </div>
+                    </div>
+
+                    <!-- Card 4: Lunar Ephemeris & Moon Phases -->
+                    <div class="bento-card glass-widget moon-widget">
+                        <div class="widget-header">
+                            <span class="widget-title">
+                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+                                LUNAR EPHEMERIS
+                            </span>
+                            <span id="moon-phase-badge" class="widget-badge">CALCULATING...</span>
+                        </div>
+                        <div class="widget-moon-body">
+                            <div class="moon-display-wrapper">
+                                <div class="moon-graphic" id="moon-graphic">
+                                    <svg width="60" height="60" viewBox="0 0 100 100" class="moon-svg">
+                                        <circle cx="50" cy="50" r="46" fill="#0d111e" stroke="rgba(121,160,255,0.4)" stroke-width="2"/>
+                                        <path id="moon-phase-shadow" d="M 50 4 A 46 46 0 0 1 50 96 A 25 46 0 0 0 50 4" fill="#e2edff"/>
+                                    </svg>
+                                </div>
+                                <div class="moon-telemetry">
+                                    <div class="telemetry-row">
+                                        <span class="telemetry-label">ILLUMINATION:</span>
+                                        <span id="moon-illumination" class="telemetry-val">--%</span>
+                                    </div>
+                                    <div class="telemetry-row">
+                                        <span class="telemetry-label">LUNAR AGE:</span>
+                                        <span id="moon-age" class="telemetry-val">-- DAYS</span>
+                                    </div>
+                                    <div class="telemetry-row">
+                                        <span class="telemetry-label">NEXT FULL MOON:</span>
+                                        <span id="next-full-moon" class="telemetry-val">--</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="ephemeris-footer">
+                                <div class="sun-cycle-item">
+                                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#ffb703" stroke-width="2"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/></svg>
+                                    <span>DAWN: <strong id="sun-dawn-time">05:45 AM</strong></span>
+                                </div>
+                                <div class="sun-cycle-item">
+                                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#fb8500" stroke-width="2"><path d="M17 18a5 5 0 0 0-10 0"/><line x1="12" y1="2" x2="12" y2="9"/><line x1="4.22" y1="10.22" x2="5.64" y2="11.64"/><line x1="1" y1="18" x2="3" y2="18"/><line x1="21" y1="18" x2="23" y2="18"/></svg>
+                                    <span>DUSK: <strong id="sun-dusk-time">06:40 PM</strong></span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Card 5: ISS Orbit & Space Weather Telemetry -->
+                    <div class="bento-card glass-widget iss-widget">
+                        <div class="widget-header">
+                            <span class="widget-title">
+                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="2"/><path d="M16.24 7.76a6 6 0 0 1 0 8.49m-8.48-.01a6 6 0 0 1 0-8.49m11.31-2.82a10 10 0 0 1 0 14.14m-14.14 0a10 10 0 0 1 0-14.14"/></svg>
+                                ISS & SPACE WEATHER
+                            </span>
+                            <span class="widget-badge status-live">LIVE TELEMETRY</span>
+                        </div>
+                        <div class="widget-iss-body">
+                            <div class="iss-grid">
+                                <div class="telemetry-card">
+                                    <span class="telemetry-k">ORBIT VELOCITY</span>
+                                    <span class="telemetry-v"><span id="iss-speed">27,580</span> km/h</span>
+                                </div>
+                                <div class="telemetry-card">
+                                    <span class="telemetry-k">ALTITUDE</span>
+                                    <span class="telemetry-v"><span id="iss-alt">418.6</span> km</span>
+                                </div>
+                                <div class="telemetry-card">
+                                    <span class="telemetry-k">GEOMAGNETIC</span>
+                                    <span class="telemetry-v status-ok">Kp 2.0 (QUIET)</span>
+                                </div>
+                                <div class="telemetry-card">
+                                    <span class="telemetry-k">SOLAR WIND</span>
+                                    <span class="telemetry-v" style="color: #79a0ff;">428 km/s</span>
+                                </div>
+                            </div>
+                            <div class="iss-status-banner">
+                                <span class="pulse-dot"></span>
+                                <span id="iss-coords">LAT: 28.4° N | LON: 84.1° E • ORBIT #142,890</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Card 6: Cosmic Scratchpad & Quick Notes -->
+                    <div class="bento-card glass-widget notes-widget">
+                        <div class="widget-header">
+                            <span class="widget-title">
+                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
+                                SCRATCHPAD & NOTES
+                            </span>
+                            <div class="widget-actions">
+                                <button type="button" id="copy-notes-btn" class="icon-btn" title="Copy Notes" aria-label="Copy Notes">
+                                    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+                                </button>
+                                <button type="button" id="clear-notes-btn" class="icon-btn" title="Clear Notes" aria-label="Clear Notes">
+                                    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>
+                                </button>
+                            </div>
+                        </div>
+                        <div class="widget-notes-body">
+                            <textarea id="scratchpad-input" placeholder="Type quick notes, ideas, or code snippets (auto-saves instantly)..." class="scratchpad-textarea"></textarea>
+                            <div class="notes-footer">
+                                <span id="notes-char-count">0 chars • 0 words</span>
+                                <span id="notes-save-status" class="save-status">AUTO-SAVED</span>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </section>
+        </div>
+
+        <!-- TODAY APOD Main Experience Content -->
         <div id="apod-content" class="apod-experience hidden">
             <!-- Hero Header Section -->
             <section class="hero-section reveal-element hero-reveal">
@@ -237,9 +427,11 @@
                     </div>
                 </div>
             </section>
+        </div>
+
         <!-- 3D Interactive Solar System Viewport Section (Full 3D-CSS-Solar-System-master integration) -->
         <div id="solar-content" class="solar-experience hidden" style="width: 100%; height: calc(100vh - 90px); min-height: 750px; position: relative;">
-            <iframe id="solar-iframe" src="solar.html" title="3D CSS Solar System" style="width: 100%; height: 100%; min-height: 750px; border: none; background: transparent; border-radius: 12px;"></iframe>
+            <iframe id="solar-iframe" src="solar/index.html" title="3D CSS Solar System" style="width: 100%; height: 100%; min-height: 750px; border: none; background: transparent; border-radius: 12px;"></iframe>
         </div>
     </main>
 
@@ -265,35 +457,89 @@
         </div>
     </div>
 
-    <!-- Mission / About Modal -->
+    <!-- Mission / About Creator Modal -->
     <div id="about-modal" class="modal hidden" role="dialog" aria-labelledby="about-modal-title" aria-modal="true">
-        <div class="modal-content glass-hud">
+        <div class="modal-content glass-hud" style="max-width: 650px;">
             <div class="modal-header">
-                <div class="hud-badge">MISSION BRIEFING</div>
-                <h3 id="about-modal-title">COSMIC EXPERIENCE</h3>
+                <div class="hud-badge">COMMANDER & CREATOR BRIEFING</div>
+                <h3 id="about-modal-title">KANTARAJ LUITEL (SUSANT)</h3>
+                <p class="modal-sub">Nepal • Student • Developer • Cybersecurity Enthusiast • Content Creator</p>
             </div>
-            <div class="about-body">
-                <p><strong>COSMIC</strong> is a deep-space astronomical observation console bringing NASA's Astronomy Picture of the Day (APOD) to life through cinematic science and atmospheric design.</p>
-                <p>Every single day, NASA publishes a new image or video of our fascinating universe alongside explanations written by professional astronomers.</p>
-                <p class="tech-note">Built with Vanilla Web Technologies, Vite, HTML5 Canvas, and NASA Open APIs for the Hack Club Stardance Mission.</p>
+            <div class="about-body" style="display: flex; flex-direction: column; gap: 14px; max-height: 60vh; overflow-y: auto; padding-right: 4px;">
+                <div style="display: flex; align-items: center; gap: 16px; background: rgba(255,255,255,0.04); padding: 12px; border-radius: 12px; border: 1px solid rgba(255,255,255,0.08);">
+                    <img src="https://cdn.dribbble.com/users/1019864/screenshots/3079099/codeloop.gif" alt="Coding GIF" style="width: 80px; height: 80px; border-radius: 10px; object-fit: cover; border: 1px solid rgba(121,160,255,0.3);">
+                    <div>
+                        <h4 style="font-family: 'Space Grotesk', sans-serif; font-size: 1.05rem; color: #fff; margin-bottom: 4px;">Kantaraj Luitel (Susant)</h4>
+                        <p style="font-size: 0.82rem; color: rgba(255,255,255,0.7); line-height: 1.4;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#79a0ff" stroke-width="2" style="vertical-align: middle; margin-right: 4px;"><path d="M4.5 16.5c-1.5 1.26-2 5-2 5s3.74-.5 5-2c.71-.84.7-2.13-.09-2.91a2.18 2.18 0 0 0-2.91-.09z"/><path d="m12 15-3-3a22 22 0 0 1 2-3.95A12.88 12.88 0 0 1 22 2c0 2.72-.78 7.5-6 11a22.35 22.35 0 0 1-4 2z"/><path d="M9 12H4s.55-3.03 2-4c1.62-1.08 5 0 5 0"/><path d="M12 15v5s3.03-.55 4-2c1.08-1.62 0-5 0-5"/></svg> Building cool things with code while exploring AI, Generative AI, and Cybersecurity.</p>
+                        <span style="display: inline-block; font-size: 0.72rem; color: #79a0ff; font-weight: 600; margin-top: 4px;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#ffdd00" stroke-width="2" style="vertical-align: middle; margin-right: 4px;"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg> 2nd Place - Campfire Kathmandu 2026 | HackClub</span>
+                    </div>
+                </div>
+
+                <div style="font-size: 0.85rem; color: rgba(255,255,255,0.85); line-height: 1.5;">
+                    <p style="margin-bottom: 8px;"><strong>COSMORA</strong> is a custom deep-space astronomical observation console bringing NASA's Astronomy Picture of the Day (APOD) and a 3D Solar System to life through cinematic science and atmospheric design.</p>
+                    <p style="font-size: 0.78rem; color: rgba(255,255,255,0.6);"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#79a0ff" stroke-width="2" style="vertical-align: middle; margin-right: 4px;"><path d="M22 10v6M2 10l10-5 10 5-10 5z"/><path d="M6 12v5c3 3 9 3 12 0v-5"/></svg> Oracle Cloud Certified Generative AI Professional | AI Foundations Associate | APIsec Certified Practitioner</p>
+                </div>
+
+                <div style="display: flex; flex-wrap: wrap; gap: 6px; margin: 4px 0;">
+                    <a href="https://github.com/susantedit" target="_blank" rel="noopener noreferrer"><img src="https://img.shields.io/badge/GitHub-181717.svg?logo=github&logoColor=white" alt="GitHub"></a>
+                    <a href="https://linkedin.com/in/kantaraj-luitel" target="_blank" rel="noopener noreferrer"><img src="https://img.shields.io/badge/LinkedIn-%230077B5.svg?logo=linkedin&logoColor=white" alt="LinkedIn"></a>
+                    <a href="https://instagram.com/susantgamerz" target="_blank" rel="noopener noreferrer"><img src="https://img.shields.io/badge/Instagram-%23E4405F.svg?logo=Instagram&logoColor=white" alt="Instagram"></a>
+                    <a href="https://x.com/Susantedit" target="_blank" rel="noopener noreferrer"><img src="https://img.shields.io/badge/X-black.svg?logo=X&logoColor=white" alt="X"></a>
+                    <a href="https://facebook.com/Kantaraj.Luitel" target="_blank" rel="noopener noreferrer"><img src="https://img.shields.io/badge/Facebook-%231877F2.svg?logo=Facebook&logoColor=white" alt="Facebook"></a>
+                    <a href="https://wa.me/9779708838261" target="_blank" rel="noopener noreferrer"><img src="https://img.shields.io/badge/WhatsApp-25D366?logo=whatsapp&logoColor=white" alt="WhatsApp"></a>
+                    <a href="mailto:susantedit@gmail.com"><img src="https://img.shields.io/badge/Email-D14836?logo=gmail&logoColor=white" alt="Email"></a>
+                </div>
+
+                <div style="text-align: center; margin-top: 6px;">
+                    <a href="https://buymeacoffee.com/Susantedit" target="_blank" rel="noopener noreferrer" style="display: inline-block;">
+                        <img src="https://img.shields.io/badge/Buy%20Me%20a%20Coffee-ffdd00?style=for-the-badge&logo=buy-me-a-coffee&logoColor=black" alt="Buy Me a Coffee">
+                    </a>
+                </div>
             </div>
-            <div class="modal-actions">
-                <button type="button" id="close-about-btn" class="hud-btn primary">CLOSE BRIEFING</button>
+            <div class="modal-actions" style="margin-top: 14px;">
+                <button type="button" id="close-about-btn" class="hud-btn primary" style="width: 100%;">CLOSE MISSION BRIEFING</button>
             </div>
         </div>
     </div>
 
-    <!-- Minimal Scientific Footer -->
+    <!-- Add Shortcut Modal -->
+    <div id="shortcut-modal" class="modal hidden" role="dialog" aria-labelledby="shortcut-modal-title" aria-modal="true">
+        <div class="modal-content glass-hud">
+            <div class="modal-header">
+                <div class="hud-badge">QUICK LAUNCHER</div>
+                <h3 id="shortcut-modal-title">ADD NEW SHORTCUT</h3>
+            </div>
+            
+            <form id="shortcut-form" class="archive-form">
+                <div class="date-input-wrap">
+                    <label for="shortcut-name" class="sr-only">Shortcut Name</label>
+                    <input type="text" id="shortcut-name" placeholder="Shortcut Name (e.g. GitHub)" class="hud-date-input" required autocomplete="off">
+                </div>
+                <div class="date-input-wrap" style="margin-top: 12px;">
+                    <label for="shortcut-url" class="sr-only">Shortcut URL</label>
+                    <input type="url" id="shortcut-url" placeholder="https://github.com" class="hud-date-input" required autocomplete="off">
+                </div>
+                <div class="modal-actions">
+                    <button type="button" id="close-shortcut-btn" class="hud-btn">CANCEL</button>
+                    <button type="submit" class="hud-btn primary">ADD SHORTCUT</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Minimal Scientific Footer with Creator Branding -->
     <footer class="hud-footer layer-ui">
         <div class="footer-left">
             <span>COSMIC OBSERVER v2.0</span>
             <span class="sep">|</span>
-            <span>POWERED BY NASA APOD API</span>
+            <span>DEVELOPED BY <a href="https://github.com/susantedit" target="_blank" rel="noopener noreferrer" style="color: #79a0ff; text-decoration: none; font-weight: 700;">KANTARAJ LUITEL (SUSANT)</a></span>
         </div>
         <div class="footer-right">
-            <a href="https://stardance.hackclub.com/missions/nasa-page" target="_blank" rel="noopener noreferrer" class="footer-link">HACK CLUB STARDANCE</a>
+            <a href="https://github.com/susantedit" target="_blank" rel="noopener noreferrer" class="footer-link">GITHUB</a>
             <span class="sep">|</span>
-            <a href="https://github.com/susantedit/Hack-club-stardance-Give-Your-Website-a-Pulse-" target="_blank" rel="noopener noreferrer" class="footer-link">GITHUB REPO</a>
+            <a href="https://linkedin.com/in/kantaraj-luitel" target="_blank" rel="noopener noreferrer" class="footer-link">LINKEDIN</a>
+            <span class="sep">|</span>
+            <a href="https://buymeacoffee.com/Susantedit" target="_blank" rel="noopener noreferrer" class="footer-link" style="color: #ffdd00;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#ffdd00" stroke-width="2" style="vertical-align: middle; margin-right: 4px;"><path d="M18 8h1a4 4 0 0 1 0 8h-1"/><path d="M2 8h16v9a4 4 0 0 1-4 4H6a4 4 0 0 1-4-4V8z"/><line x1="6" y1="1" x2="6" y2="4"/><line x1="10" y1="1" x2="10" y2="4"/><line x1="14" y1="1" x2="14" y2="4"/></svg> DONATE</a>
         </div>
     </footer>
 

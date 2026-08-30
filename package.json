@@ -1,11 +1,17 @@
 {
-  "name": "nasa-new-tab",
-  "private": true,
+  "name": "cosmora-nasa-new-tab",
   "version": "1.0.0",
+  "description": "COSMORA — Deep Space Astronomical Dashboard & Minimal New Tab created by Kantaraj Luitel (Susant)",
+  "author": "Kantaraj Luitel (Susant) <susantedit@gmail.com> (https://github.com/susantedit)",
+  "homepage": "https://github.com/susantedit/Hack-club-stardance-Give-Your-Website-a-Pulse-",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/susantedit/Hack-club-stardance-Give-Your-Website-a-Pulse-.git"
+  },
   "type": "module",
   "scripts": {
-    "dev": "vite",
-    "build": "vite build",
+    "dev": "node copy-solar.js && vite",
+    "build": "node copy-solar.js && vite build",
     "preview": "vite preview"
   },
   "devDependencies": {

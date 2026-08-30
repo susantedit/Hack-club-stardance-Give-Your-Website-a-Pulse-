@@ -2,12 +2,12 @@ import { defineConfig } from 'vite'
 import { resolve } from 'path'
 
 export default defineConfig({
-  base: '/Hack-club-stardance-Give-Your-Website-a-Pulse-/',
+  // Relative base works universally on Vercel, GitHub Pages, and local preview
+  base: process.env.VERCEL ? '/' : (process.env.BASE_URL || './'),
   build: {
     rollupOptions: {
       input: {
         main: resolve(__dirname, 'index.html'),
-        solar: resolve(__dirname, 'solar.html'),
       },
     },
   },
