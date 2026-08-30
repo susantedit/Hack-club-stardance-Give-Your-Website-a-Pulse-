@@ -117,8 +117,13 @@ async function fetchNasaData() {
     const apodDescEl = document.getElementById('apod-desc');
     const apodDateEl = document.getElementById('apod-date');
     
+    // Read API Key from Vite environment variables (falling back to DEMO_KEY)
+    const apiKey = (typeof import.meta !== 'undefined' && import.meta.env && import.meta.env.VITE_NASA_API_KEY) 
+        ? import.meta.env.VITE_NASA_API_KEY 
+        : 'DEMO_KEY';
+
     try {
-        const response = await fetch('https://api.nasa.gov/planetary/apod?api_key=DEMO_KEY');
+        const response = await fetch(`https://api.nasa.gov/planetary/apod?api_key=${apiKey}`);
         const data = await response.json();
 
         if (data.media_type === 'image' && (data.hdurl || data.url)) {
