@@ -222,16 +222,23 @@ body {
     opacity: 0.9;
 }
 
-.brand-icon {
-    width: 38px;
-    height: 38px;
-    border-radius: 10px;
-    background: rgba(107, 140, 255, 0.08);
-    border: 1px solid rgba(107, 140, 255, 0.2);
+.brand-icon.cosmora-icon-frame {
+    width: 40px;
+    height: 40px;
+    border-radius: 12px;
+    background: rgba(121, 160, 255, 0.08);
+    border: 1px solid rgba(121, 160, 255, 0.25);
     display: flex;
     align-items: center;
     justify-content: center;
-    color: var(--accent-cyan);
+    overflow: hidden;
+}
+
+.cosmora-nav-logo {
+    width: 28px;
+    height: 28px;
+    object-fit: contain;
+    filter: drop-shadow(0 0 6px rgba(121, 160, 255, 0.5));
 }
 
 .brand-text {
@@ -241,18 +248,18 @@ body {
 
 .brand-title {
     font-family: var(--font-display);
-    font-size: 0.95rem;
-    font-weight: 800;
-    letter-spacing: 2.5px;
+    font-size: 1.05rem;
+    font-weight: 900;
+    letter-spacing: 3px;
     color: var(--text-primary);
 }
 
 .brand-sub {
     font-family: var(--font-display);
-    font-size: 0.55rem;
-    font-weight: 500;
+    font-size: 0.58rem;
+    font-weight: 600;
     letter-spacing: 2px;
-    color: var(--text-tertiary);
+    color: var(--accent-cyan);
 }
 
 .hud-nav {
@@ -602,14 +609,33 @@ body {
 
 .hero-headline {
     font-family: var(--font-display);
-    font-size: 2.5rem;
+    font-size: 2.85rem;
     font-weight: 900;
-    letter-spacing: 5px;
-    margin-bottom: 1.25rem;
-    line-height: 1.2;
+    letter-spacing: 6px;
+    margin-bottom: 0.5rem;
+    line-height: 1.15;
     background: linear-gradient(180deg, #ffffff 55%, rgba(255, 255, 255, 0.72) 100%);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
+}
+
+.brand-tagline {
+    font-family: var(--font-body);
+    font-size: 1.15rem;
+    font-style: italic;
+    letter-spacing: 0.8px;
+    color: var(--accent-cyan-bright);
+    margin-bottom: 0.25rem;
+}
+
+.brand-subtagline {
+    font-family: var(--font-display);
+    font-size: 0.78rem;
+    font-weight: 700;
+    letter-spacing: 2.5px;
+    color: var(--text-secondary);
+    margin-bottom: 1.75rem;
+    text-transform: uppercase;
 }
 
 .apod-header-meta {

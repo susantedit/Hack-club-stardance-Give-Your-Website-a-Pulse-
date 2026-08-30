@@ -3,21 +3,23 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Cosmic — NASA Astronomy Picture of the Day</title>
-    <meta name="description" content="An immersive futuristic spacecraft observation console for NASA's Astronomy Picture of the Day (APOD). Explore daily universe discoveries and historical archives back to 1995.">
+    <title>COSMORA — Somewhere in the cosmos, something is waiting.</title>
+    <meta name="description" content="COSMORA — Somewhere in the cosmos, something is waiting. The universe is closer than you think. An immersive deep-space observation console for NASA's Astronomy Picture of the Day.">
     <meta name="theme-color" content="#030408">
     
     <!-- Open Graph Metadata -->
-    <meta property="og:title" content="Cosmic — NASA Astronomy Picture of the Day">
-    <meta property="og:description" content="Explore today's window into the universe through NASA's APOD observation console.">
+    <meta property="og:title" content="COSMORA — Somewhere in the cosmos, something is waiting.">
+    <meta property="og:description" content="The universe is closer than you think. Explore daily NASA APOD discoveries in deep space.">
     <meta property="og:type" content="website">
     <meta property="og:url" content="https://susantedit.github.io/Hack-club-stardance-Give-Your-Website-a-Pulse-/">
-    <meta property="og:site_name" content="Cosmic Console">
+    <meta property="og:site_name" content="COSMORA">
+    <meta property="og:image" content="/COSMORA.png">
     
     <!-- Twitter Card Metadata -->
     <meta name="twitter:card" content="summary_large_image">
-    <meta name="twitter:title" content="Cosmic — NASA Astronomy Picture of the Day">
-    <meta name="twitter:description" content="Explore daily space discoveries through NASA's APOD observation console.">
+    <meta name="twitter:title" content="COSMORA — Somewhere in the cosmos, something is waiting.">
+    <meta name="twitter:description" content="The universe is closer than you think. Daily NASA APOD deep space console.">
+    <meta name="twitter:image" content="/COSMORA.png">
     
     <!-- Crisp Vector SVG Favicon -->
     <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%2379a0ff' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><circle cx='12' cy='12' r='9'/><ellipse cx='12' cy='12' rx='10' ry='4' transform='rotate(-30 12 12)'/></svg>">
@@ -29,6 +31,7 @@
     <link rel="stylesheet" href="/style.css">
 </head>
 <body>
+
     <!-- Multilayer Cosmic Deep Space Canvas & Celestial Atmosphere -->
     <div class="space-viewport" id="space-viewport">
         <canvas id="starfield-canvas"></canvas>
@@ -43,12 +46,12 @@
     <!-- Spacecraft Navigation Console Header -->
     <header class="console-header layer-ui glass-nav">
         <div class="header-left">
-            <a href="#" id="brand-logo" class="brand-link" aria-label="NASA APOD Cosmic Console Home">
-                <div class="brand-icon">
-                    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><ellipse cx="12" cy="12" rx="10" ry="4" transform="rotate(-30 12 12)"/></svg>
+            <a href="#" id="brand-logo" class="brand-link" aria-label="COSMORA Home">
+                <div class="brand-icon cosmora-icon-frame">
+                    <img src="/COSMORA.png" alt="COSMORA Logo" class="cosmora-nav-logo">
                 </div>
                 <div class="brand-text">
-                    <span class="brand-title">APOD</span>
+                    <span class="brand-title">COSMORA</span>
                     <span class="brand-sub">COSMIC CONSOLE</span>
                 </div>
             </a>
@@ -80,7 +83,7 @@
                 <div class="loader-core"></div>
             </div>
             <div class="loading-meta">
-                <span class="loading-eyebrow">NASA DEEP SPACE DATA LINK</span>
+                <span class="loading-eyebrow">COSMORA DEEP SPACE DATA LINK</span>
                 <h3 id="loading-status" class="loading-text">RECEIVING ASTRONOMICAL TRANSMISSION...</h3>
             </div>
             
@@ -114,9 +117,11 @@
             <section class="hero-section reveal-element hero-reveal">
                 <div class="hero-eyebrow">
                     <span class="pulse-dot"></span>
-                    <span class="eyebrow-text">NASA ASTRONOMY PICTURE OF THE DAY</span>
+                    <span class="eyebrow-text">COSMORA — NASA ASTRONOMY PICTURE OF THE DAY</span>
                 </div>
-                <h1 class="hero-headline">TODAY'S WINDOW INTO THE UNIVERSE</h1>
+                <h1 class="hero-headline">COSMORA</h1>
+                <p class="brand-tagline">“Somewhere in the cosmos, something is waiting.”</p>
+                <p class="brand-subtagline">“The universe is closer than you think.”</p>
                 
                 <div class="apod-header-meta">
                     <h2 id="apod-main-title" class="apod-title">Loading Cosmic Entry...</h2>
