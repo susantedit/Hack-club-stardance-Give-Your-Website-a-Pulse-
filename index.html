@@ -71,6 +71,7 @@
         <nav class="header-nav" aria-label="Main Navigation">
             <button type="button" id="nav-today" class="nav-link active" tabindex="0">TODAY</button>
             <button type="button" id="nav-archive" class="nav-link" tabindex="0">ARCHIVE</button>
+            <button type="button" id="nav-solar" class="nav-link" tabindex="0">3D ORBITS</button>
             <button type="button" id="nav-about" class="nav-link" tabindex="0">MISSION</button>
         </nav>
 
@@ -232,6 +233,75 @@
                         <div class="log-divider"></div>
                         <div class="log-body">
                             <p id="apod-explanation" class="explanation-text">Loading scientific breakdown from NASA's archive...</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        <!-- 3D Interactive Solar System Viewport Section -->
+        <div id="solar-content" class="solar-experience hidden">
+            <section class="solar-hero-section reveal-element">
+                <div class="hero-eyebrow">
+                    <span class="pulse-dot"></span>
+                    <span class="eyebrow-text">COSMORA — 3D INTERACTIVE SOLAR SYSTEM</span>
+                </div>
+                <h1 class="hero-headline">SOLAR SYSTEM ORBITS</h1>
+                <p class="brand-tagline">“Real-time 3D planetary orbital mechanics.”</p>
+                
+                <!-- Solar Controls Bar -->
+                <div class="solar-controls-bar glass-hud">
+                    <div class="planet-select-row">
+                        <button type="button" class="planet-btn active" data-planet="sun">SUN</button>
+                        <button type="button" class="planet-btn" data-planet="mercury">MERCURY</button>
+                        <button type="button" class="planet-btn" data-planet="venus">VENUS</button>
+                        <button type="button" class="planet-btn" data-planet="earth">EARTH</button>
+                        <button type="button" class="planet-btn" data-planet="mars">MARS</button>
+                        <button type="button" class="planet-btn" data-planet="jupiter">JUPITER</button>
+                        <button type="button" class="planet-btn" data-planet="saturn">SATURN</button>
+                        <button type="button" class="planet-btn" data-planet="uranus">URANUS</button>
+                        <button type="button" class="planet-btn" data-planet="neptune">NEPTUNE</button>
+                    </div>
+                    <div class="view-mode-row">
+                        <button type="button" id="toggle-3d-btn" class="hud-btn small active">3D VIEW</button>
+                        <button type="button" id="toggle-zoom-btn" class="hud-btn small">ZOOM CLOSE</button>
+                    </div>
+                </div>
+            </section>
+
+            <!-- 3D Solar System Model Frame -->
+            <section class="solar-model-section">
+                <div id="universe-viewport" class="scale-stretched view-3D zoom-large">
+                    <div id="galaxy-3d">
+                        <div id="solar-system-3d" class="earth">
+                            <div id="orbit-mercury" class="planet-orbit orbit-mercury">
+                                <div class="planet-pos"><div class="planet-sphere mercury-sphere" title="Mercury"></div></div>
+                            </div>
+                            <div id="orbit-venus" class="planet-orbit orbit-venus">
+                                <div class="planet-pos"><div class="planet-sphere venus-sphere" title="Venus"></div></div>
+                            </div>
+                            <div id="orbit-earth" class="planet-orbit orbit-earth">
+                                <div class="planet-pos">
+                                    <div class="planet-orbit moon-orbit"><div class="planet-pos"><div class="moon-sphere"></div></div></div>
+                                    <div class="planet-sphere earth-sphere" title="Earth"></div>
+                                </div>
+                            </div>
+                            <div id="orbit-mars" class="planet-orbit orbit-mars">
+                                <div class="planet-pos"><div class="planet-sphere mars-sphere" title="Mars"></div></div>
+                            </div>
+                            <div id="orbit-jupiter" class="planet-orbit orbit-jupiter">
+                                <div class="planet-pos"><div class="planet-sphere jupiter-sphere" title="Jupiter"></div></div>
+                            </div>
+                            <div id="orbit-saturn" class="planet-orbit orbit-saturn">
+                                <div class="planet-pos">
+                                    <div class="planet-sphere saturn-sphere" title="Saturn"><div class="saturn-ring-3d"></div></div>
+                                </div>
+                            </div>
+                            <div id="orbit-uranus" class="planet-orbit orbit-uranus">
+                                <div class="planet-pos"><div class="planet-sphere uranus-sphere" title="Uranus"></div></div>
+                            </div>
+                            <div id="orbit-neptune" class="planet-orbit orbit-neptune">
+                                <div class="planet-pos"><div class="planet-sphere neptune-sphere" title="Neptune"></div></div>
+                            </div>
+                            <div id="sun-3d-core" class="sun-core" title="Sun"></div>
                         </div>
                     </div>
                 </div>

@@ -3,11 +3,58 @@
  * Main Application Engine & Interactive System
  */
 
+function initSolarSystem() {
+    const toggle3DBtn = document.getElementById('toggle-3d-btn');
+    const toggleZoomBtn = document.getElementById('toggle-zoom-btn');
+    const viewport = document.getElementById('universe-viewport');
+    const planetBtns = document.querySelectorAll('.planet-btn');
+
+    if (toggle3DBtn && viewport) {
+        toggle3DBtn.addEventListener('click', () => {
+            if (viewport.classList.contains('view-3D')) {
+                viewport.classList.remove('view-3D');
+                viewport.classList.add('view-2D');
+                toggle3DBtn.textContent = '2D VIEW';
+                toggle3DBtn.classList.remove('active');
+            } else {
+                viewport.classList.remove('view-2D');
+                viewport.classList.add('view-3D');
+                toggle3DBtn.textContent = '3D VIEW';
+                toggle3DBtn.classList.add('active');
+            }
+        });
+    }
+
+    if (toggleZoomBtn && viewport) {
+        toggleZoomBtn.addEventListener('click', () => {
+            if (viewport.classList.contains('zoom-large')) {
+                viewport.classList.remove('zoom-large');
+                viewport.classList.add('zoom-close');
+                toggleZoomBtn.textContent = 'ZOOM FAR';
+                toggleZoomBtn.classList.add('active');
+            } else {
+                viewport.classList.remove('zoom-close');
+                viewport.classList.add('zoom-large');
+                toggleZoomBtn.textContent = 'ZOOM CLOSE';
+                toggleZoomBtn.classList.remove('active');
+            }
+        });
+    }
+
+    planetBtns.forEach(btn => {
+        btn.addEventListener('click', () => {
+            planetBtns.forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+        });
+    });
+}
+
 document.addEventListener('DOMContentLoaded', () => {
     initCosmicBackground();
     initClock();
     initCosmicAudio();
     initNavigation();
+    initSolarSystem();
     initKeyboardShortcuts();
     
     // Load Today's Astronomical Transmission
@@ -308,9 +355,9 @@ function initCosmicBackground() {
     function generateStars() {
         stars = [];
         shootingStars = [];
-        // Adaptive star density based on resolution
-        const baseDensity = Math.floor((canvas.width * canvas.height) / 3500);
-        const starCount = Math.min(window.innerWidth < 768 ? 120 : 320, baseDensity);
+        // Adaptive star density based on resolution (600 stars on desktop)
+        const baseDensity = Math.floor((canvas.width * canvas.height) / 2000);
+        const starCount = Math.min(window.innerWidth < 768 ? 250 : 600, baseDensity);
 
         for (let i = 0; i < starCount; i++) {
             const isFarLayer = Math.random() > 0.3;
@@ -599,7 +646,13 @@ function initNavigation() {
     // Nav Buttons
     const navToday = document.getElementById('nav-today');
     const navArchive = document.getElementById('nav-archive');
+    const navSolar = document.getElementById('nav-solar');
     const navAbout = document.getElementById('nav-about');
+
+    const loadingState = document.getElementById('loading-state');
+    const errorState = document.getElementById('error-state');
+    const apodContent = document.getElementById('apod-content');
+    const solarContent = document.getElementById('solar-content');
 
     // Modals
     const archiveModal = document.getElementById('archive-modal');
@@ -619,7 +672,18 @@ function initNavigation() {
     if (navToday) {
         navToday.addEventListener('click', () => {
             setActiveNav(navToday);
+            if (solarContent) solarContent.classList.add('hidden');
             loadAPOD();
+        });
+    }
+
+    if (navSolar) {
+        navSolar.addEventListener('click', () => {
+            setActiveNav(navSolar);
+            if (loadingState) loadingState.classList.add('hidden');
+            if (errorState) errorState.classList.add('hidden');
+            if (apodContent) apodContent.classList.add('hidden');
+            if (solarContent) solarContent.classList.remove('hidden');
         });
     }
 
