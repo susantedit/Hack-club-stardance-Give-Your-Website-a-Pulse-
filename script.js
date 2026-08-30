@@ -13,14 +13,20 @@ document.addEventListener('DOMContentLoaded', () => {
     loadAPOD();
 });
 
-// --- API Service Engine ---
+// --- API Service Engine & In-Memory Transmission Cache ---
 const API_BASE = 'https://api.nasa.gov/planetary/apod';
+const apodCache = new Map();
 
 /**
- * Normalized APOD API Data Fetcher
+ * Normalized APOD API Data Fetcher with In-Memory Caching
  * @param {string} [dateStr] - Optional YYYY-MM-DD date string
  */
 async function getAPOD(dateStr = '') {
+    const cacheKey = dateStr || 'today';
+    if (apodCache.has(cacheKey)) {
+        return apodCache.get(cacheKey);
+    }
+
     const apiKey = (typeof import.meta !== 'undefined' && import.meta.env && import.meta.env.VITE_NASA_API_KEY)
         ? import.meta.env.VITE_NASA_API_KEY
         : 'DEMO_KEY';
@@ -48,7 +54,7 @@ async function getAPOD(dateStr = '') {
         }
     }
 
-    return {
+    const normalizedData = {
         title: raw.title || 'Untitled Cosmic Discovery',
         date: raw.date || new Date().toISOString().split('T')[0],
         explanation: raw.explanation || 'No scientific explanation provided for this record.',
@@ -58,19 +64,35 @@ async function getAPOD(dateStr = '') {
         hdUrl: raw.hdurl || raw.url || '',
         copyright: raw.copyright ? `© ${raw.copyright.trim()}` : ''
     };
+
+    apodCache.set(cacheKey, normalizedData);
+    return normalizedData;
 }
 
 // --- APOD Renderer & Controller ---
 let currentAPOD = null;
+let lastRequestedDate = '';
+let isFetching = false;
 
 async function loadAPOD(dateStr = '') {
+    // Request Deduplication Lock (Prevent duplicate concurrent requests)
+    if (isFetching && lastRequestedDate === dateStr) return;
+    
+    isFetching = true;
+    lastRequestedDate = dateStr;
+    
     const loadingState = document.getElementById('loading-state');
     const errorState = document.getElementById('error-state');
     const apodContent = document.getElementById('apod-content');
     const loadingStatus = document.getElementById('loading-status');
 
-    // UI Loading Transition
-    if (loadingStatus) loadingStatus.textContent = dateStr ? `RETRACTING ARCHIVE: ${dateStr}...` : 'RECEIVING NASA TRANSMISSION...';
+    // UI Loading Transition while keeping cosmic background intact
+    if (loadingStatus) {
+        loadingStatus.textContent = dateStr 
+            ? `RETRACTING ARCHIVE ENTRY: ${dateStr}...` 
+            : 'ESTABLISHING ORBITAL TRANSMISSION...';
+    }
+
     loadingState.classList.remove('hidden');
     errorState.classList.add('hidden');
     apodContent.classList.add('hidden');
@@ -80,12 +102,22 @@ async function loadAPOD(dateStr = '') {
         currentAPOD = data;
         renderAPOD(data);
 
-        // Transition Content In
+        // Transition Content In with Staggered Reveal Sequence
         loadingState.classList.add('hidden');
         apodContent.classList.remove('hidden');
+
+        // Reset and trigger reveal sequence
+        document.querySelectorAll('.reveal-element').forEach(el => el.classList.remove('active'));
+        requestAnimationFrame(() => {
+            setTimeout(() => {
+                document.querySelectorAll('.reveal-element').forEach(el => el.classList.add('active'));
+            }, 30);
+        });
     } catch (err) {
         console.error('NASA APOD Transmission Failure:', err);
         showError(err.message || 'Unable to establish orbital connection with NASA APOD.');
+    } finally {
+        isFetching = false;
     }
 }
 
@@ -95,76 +127,164 @@ function renderAPOD(data) {
     document.getElementById('apod-main-date').textContent = formatDate(data.date);
     document.getElementById('apod-explanation').textContent = data.explanation;
     
-    // Copyright Badge
+    // Mission Log Header Elements
+    const logTitle = document.getElementById('log-apod-title');
+    const logDate = document.getElementById('log-apod-date');
+    const logCopyright = document.getElementById('log-apod-copyright');
+    if (logTitle) logTitle.textContent = data.title;
+    if (logDate) logDate.textContent = formatDate(data.date);
+    if (logCopyright) {
+        if (data.copyright) {
+            logCopyright.textContent = `© ${data.copyright}`;
+            logCopyright.classList.remove('hidden');
+        } else {
+            logCopyright.classList.add('hidden');
+        }
+    }
+
+    // Copyright Badge in Hero Header
     const copyrightBadge = document.getElementById('apod-copyright-badge');
     if (data.copyright) {
-        copyrightBadge.textContent = data.copyright;
+        copyrightBadge.textContent = `© ${data.copyright}`;
         copyrightBadge.classList.remove('hidden');
     } else {
         copyrightBadge.classList.add('hidden');
     }
 
     // Telemetry HUD Grid
-    document.getElementById('hud-media-type').textContent = data.mediaType.toUpperCase();
+    document.getElementById('hud-media-type').textContent = (data.mediaType || 'UNKNOWN').toUpperCase();
     document.getElementById('hud-date').textContent = data.date;
     document.getElementById('log-entry-id').textContent = `ENTRY #${data.date.replace(/-/g, '')}`;
 
-    // Reset Media Frames
+    const statusVal = document.getElementById('hud-status-val');
+    if (statusVal) {
+        const todayStr = new Date().toISOString().split('T')[0];
+        statusVal.textContent = (data.date === todayStr) ? '● TRANSMISSION RECEIVED' : '● ARCHIVE RECORD RETRIEVED';
+    }
+
+    // Render Media Stage Frame using Centralized Media Renderer
+    renderMedia(data);
+}
+
+/**
+ * Centralized Normalized Media Renderer
+ * Explicitly handles: IMAGE, YOUTUBE VIDEO, DIRECT MP4 VIDEO, and UNSUPPORTED MEDIA
+ */
+function renderMedia(data) {
     const imageBox = document.getElementById('media-image-box');
     const youtubeBox = document.getElementById('media-youtube-box');
     const videoBox = document.getElementById('media-video-box');
+    const unsupportedBox = document.getElementById('media-unsupported-box');
 
+    // Reset visibility across all boxes
     imageBox.classList.add('hidden');
     youtubeBox.classList.add('hidden');
     videoBox.classList.add('hidden');
+    unsupportedBox.classList.add('hidden');
 
-    // Render Triple Media States
+    if (!data.url) {
+        showMediaFallback(data.url, 'MISSING MEDIA URL');
+        return;
+    }
+
+    // State 1: IMAGE
     if (data.mediaType === 'image') {
         const img = document.getElementById('apod-image');
         const hdLink = document.getElementById('hd-link');
         
+        img.onerror = () => {
+            showMediaFallback(data.url, 'IMAGE LOAD FAILURE');
+        };
+
         img.src = data.url;
         img.alt = data.title;
-        hdLink.href = data.hdUrl;
         
-        imageBox.classList.remove('hidden');
-    } else if (data.mediaType === 'youtube') {
-        const iframe = document.getElementById('apod-youtube');
-        
-        // Ensure YouTube embed format
-        let embedUrl = data.url;
-        if (!embedUrl.includes('embed')) {
-            const ytMatch = embedUrl.match(/(?:youtu\.be\/|youtube\.com\/(?:embed\/|v\/|watch\?v=|watch\?.+&v=))([\w-]{11})/);
-            if (ytMatch && ytMatch[1]) {
-                embedUrl = `https://www.youtube.com/embed/${ytMatch[1]}?autoplay=0`;
-            }
+        if (hdLink) {
+            hdLink.href = data.hdUrl || data.url;
+            hdLink.classList.remove('hidden');
         }
-        
+
+        imageBox.classList.remove('hidden');
+    } 
+    // State 2: YOUTUBE VIDEO (iframe embed)
+    else if (data.mediaType === 'youtube') {
+        const iframe = document.getElementById('apod-youtube');
+        let embedUrl = data.url;
+
+        // Extract YouTube ID using regex pattern
+        const ytMatch = embedUrl.match(/(?:youtu\.be\/|youtube\.com\/(?:embed\/|v\/|watch\?v=|watch\?.+&v=))([\w-]{11})/);
+        if (ytMatch && ytMatch[1]) {
+            embedUrl = `https://www.youtube.com/embed/${ytMatch[1]}?autoplay=0&enablejsapi=1`;
+        }
+
         iframe.src = embedUrl;
         youtubeBox.classList.remove('hidden');
-    } else if (data.mediaType === 'video') {
+    } 
+    // State 3: DIRECT MP4 / HTML5 VIDEO PLAYER
+    else if (data.mediaType === 'video') {
         const video = document.getElementById('apod-video');
         const videoSrc = document.getElementById('apod-video-src');
-        
+
+        video.onerror = () => {
+            showMediaFallback(data.url, 'VIDEO PLAYER FAILURE');
+        };
+
         videoSrc.src = data.url;
         video.load();
         videoBox.classList.remove('hidden');
+    } 
+    // State 4: UNSUPPORTED / EXTERNAL EMBEDS
+    else {
+        showMediaFallback(data.url, 'EXTERNAL MEDIA EMBED');
     }
 }
 
-function showError(msg) {
+function showMediaFallback(url, reason) {
+    const unsupportedBox = document.getElementById('media-unsupported-box');
+    const unsupportedLink = document.getElementById('unsupported-link');
+    
+    if (unsupportedLink) {
+        unsupportedLink.href = url || 'https://apod.nasa.gov/apod/';
+    }
+    
+    unsupportedBox.classList.remove('hidden');
+}
+
+function showError(err) {
     const loadingState = document.getElementById('loading-state');
     const errorState = document.getElementById('error-state');
     const apodContent = document.getElementById('apod-content');
     const errorMsg = document.getElementById('error-message');
 
+    // Technical Exception Log for Developers
+    console.error('[NASA APOD TECHNICAL EXCEPTION LOG]:', err);
+
+    let userFriendlyMsg = 'Unable to establish orbital data link with NASA APOD service.';
+
+    if (!navigator.onLine) {
+        userFriendlyMsg = 'Network connection offline. Please check your internet link and click Retry Transmission.';
+    } else if (typeof err === 'string') {
+        userFriendlyMsg = err;
+    } else if (err && err.message) {
+        const msg = err.message.toLowerCase();
+        if (msg.includes('rate limit') || msg.includes('403') || msg.includes('key')) {
+            userFriendlyMsg = 'NASA API key rate limit reached or authorization failed. Please try again shortly or configure a custom API key.';
+        } else if (msg.includes('404') || msg.includes('date') || msg.includes('range')) {
+            userFriendlyMsg = 'No astronomical transmission record exists for the specified observation date.';
+        } else if (msg.includes('500') || msg.includes('503') || msg.includes('server')) {
+            userFriendlyMsg = 'NASA APOD deep space server is currently undergoing telemetry maintenance.';
+        } else {
+            userFriendlyMsg = err.message;
+        }
+    }
+
     loadingState.classList.add('hidden');
     apodContent.classList.add('hidden');
-    if (errorMsg) errorMsg.textContent = msg;
+    if (errorMsg) errorMsg.textContent = userFriendlyMsg;
     errorState.classList.remove('hidden');
 }
 
-// --- Cosmic Background, Starfield Canvas & Parallax Engine ---
+// --- Cosmic Background, Procedural Multi-Depth Starfield & Parallax Engine ---
 function initCosmicBackground() {
     const canvas = document.getElementById('starfield-canvas');
     if (!canvas) return;
@@ -175,7 +295,7 @@ function initCosmicBackground() {
     if (prefersReducedMotion) return;
 
     let stars = [];
-    const starCount = window.innerWidth < 768 ? 120 : 260;
+    let animationFrameId = null;
 
     function resizeCanvas() {
         canvas.width = window.innerWidth;
@@ -185,40 +305,85 @@ function initCosmicBackground() {
 
     function generateStars() {
         stars = [];
+        // Adaptive star density based on resolution (capped for CPU/GPU efficiency)
+        const baseDensity = Math.floor((canvas.width * canvas.height) / 4000);
+        const starCount = Math.min(window.innerWidth < 768 ? 100 : 280, baseDensity);
+
         for (let i = 0; i < starCount; i++) {
+            const isFarLayer = Math.random() > 0.35;
             stars.push({
                 x: Math.random() * canvas.width,
                 y: Math.random() * canvas.height,
-                radius: Math.random() * 1.3 + 0.3,
-                alpha: Math.random() * 0.8 + 0.2,
-                speed: Math.random() * 0.008 + 0.003
+                radius: isFarLayer ? Math.random() * 0.6 + 0.3 : Math.random() * 1.1 + 0.7,
+                alpha: Math.random() * 0.75 + 0.2,
+                twinkleSpeed: Math.random() * 0.012 + 0.003,
+                twinklePhase: Math.random() * Math.PI * 2,
+                driftX: isFarLayer ? (Math.random() - 0.5) * 0.04 : (Math.random() - 0.5) * 0.08,
+                driftY: isFarLayer ? (Math.random() - 0.5) * 0.04 : (Math.random() - 0.5) * 0.08,
+                isFar: isFarLayer
             });
         }
     }
 
     function renderStarfield() {
         ctx.clearRect(0, 0, canvas.width, canvas.height);
+        const now = Date.now();
         
-        stars.forEach(star => {
-            star.alpha += Math.sin(Date.now() * star.speed) * 0.008;
-            const alpha = Math.max(0.15, Math.min(0.95, star.alpha));
+        for (let i = 0; i < stars.length; i++) {
+            const star = stars[i];
+            
+            // Slow Drift Movement
+            star.x += star.driftX;
+            star.y += star.driftY;
+
+            // Wrap around canvas edges
+            if (star.x < 0) star.x = canvas.width;
+            if (star.x > canvas.width) star.x = 0;
+            if (star.y < 0) star.y = canvas.height;
+            if (star.y > canvas.height) star.y = 0;
+
+            // Individual Twinkle Phase
+            const currentAlpha = Math.max(0.12, Math.min(0.95, star.alpha + Math.sin(now * star.twinkleSpeed + star.twinklePhase) * 0.35));
 
             ctx.beginPath();
             ctx.arc(star.x, star.y, star.radius, 0, Math.PI * 2);
-            ctx.fillStyle = `rgba(255, 255, 255, ${alpha})`;
+            
+            // Give closer stars a tiny soft blue tint glow
+            if (!star.isFar && star.radius > 1.2) {
+                ctx.fillStyle = `rgba(180, 205, 255, ${currentAlpha})`;
+                ctx.shadowBlur = 4;
+                ctx.shadowColor = 'rgba(107, 140, 255, 0.4)';
+            } else {
+                ctx.fillStyle = `rgba(255, 255, 255, ${currentAlpha})`;
+                ctx.shadowBlur = 0;
+            }
+            
             ctx.fill();
-        });
+        }
 
-        requestAnimationFrame(renderStarfield);
+        if (!document.hidden) {
+            animationFrameId = requestAnimationFrame(renderStarfield);
+        }
     }
+
+    // Pause rendering when tab is hidden to conserve battery/CPU
+    document.addEventListener('visibilitychange', () => {
+        if (document.hidden) {
+            if (animationFrameId) cancelAnimationFrame(animationFrameId);
+        } else {
+            animationFrameId = requestAnimationFrame(renderStarfield);
+        }
+    });
 
     window.addEventListener('resize', resizeCanvas);
     resizeCanvas();
     renderStarfield();
 
-    // 3D Parallax Mouse Shift Engine
-    if (window.innerWidth > 768) {
+    // 3D Parallax Mouse Shift Engine (Desktop only, touch-gated & prefers-reduced-motion respected)
+    const isTouchDevice = ('ontouchstart' in window) || (navigator.maxTouchPoints > 0);
+    if (window.innerWidth > 768 && !isTouchDevice && !prefersReducedMotion) {
         const nebula = document.querySelector('.layer-nebula');
+        const midground = document.querySelector('.layer-midground');
         const planet1 = document.querySelector('.layer-planet-1');
         const planet2 = document.querySelector('.layer-planet-2');
 
@@ -230,18 +395,22 @@ function initCosmicBackground() {
         window.addEventListener('mousemove', (e) => {
             mouseX = (e.clientX - window.innerWidth / 2) / (window.innerWidth / 2);
             mouseY = (e.clientY - window.innerHeight / 2) / (window.innerHeight / 2);
-        });
+        }, { passive: true });
 
         function animateParallax() {
-            targetX += (mouseX - targetX) * 0.05;
-            targetY += (mouseY - targetY) * 0.05;
+            // Smooth linear interpolation (lerp) for fluid motion
+            targetX += (mouseX - targetX) * 0.035;
+            targetY += (mouseY - targetY) * 0.035;
 
-            if (canvas) canvas.style.transform = `translate3d(${targetX * 12}px, ${targetY * 12}px, 0)`;
-            if (nebula) nebula.style.transform = `translate3d(${targetX * -25}px, ${targetY * -25}px, 0)`;
-            if (planet1) planet1.style.transform = `translate3d(${targetX * -40}px, ${targetY * -40}px, 0)`;
-            if (planet2) planet2.style.transform = `translate3d(${targetX * 20}px, ${targetY * 20}px, 0)`;
+            if (canvas) canvas.style.transform = `translate3d(${targetX * 8}px, ${targetY * 8}px, 0)`;
+            if (nebula) nebula.style.transform = `translate3d(${targetX * -16}px, ${targetY * -16}px, 0)`;
+            if (midground) midground.style.transform = `translate3d(${targetX * -24}px, ${targetY * -24}px, 0)`;
+            if (planet1) planet1.style.transform = `translate3d(${targetX * -32}px, ${targetY * -32}px, 0)`;
+            if (planet2) planet2.style.transform = `translate3d(${targetX * 14}px, ${targetY * 14}px, 0)`;
 
-            requestAnimationFrame(animateParallax);
+            if (!document.hidden) {
+                requestAnimationFrame(animateParallax);
+            }
         }
 
         animateParallax();
@@ -335,7 +504,7 @@ function initNavigation() {
     }
 
     if (retryBtn) {
-        retryBtn.addEventListener('click', () => loadAPOD());
+        retryBtn.addEventListener('click', () => loadAPOD(lastRequestedDate));
     }
 
     if (archiveForm) {
