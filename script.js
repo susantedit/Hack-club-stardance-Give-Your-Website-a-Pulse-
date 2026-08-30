@@ -295,6 +295,7 @@ function initCosmicBackground() {
     if (prefersReducedMotion) return;
 
     let stars = [];
+    let shootingStars = [];
     let animationFrameId = null;
 
     function resizeCanvas() {
@@ -305,24 +306,65 @@ function initCosmicBackground() {
 
     function generateStars() {
         stars = [];
-        // Adaptive star density based on resolution (capped for CPU/GPU efficiency)
-        const baseDensity = Math.floor((canvas.width * canvas.height) / 4000);
-        const starCount = Math.min(window.innerWidth < 768 ? 100 : 280, baseDensity);
+        shootingStars = [];
+        // Adaptive star density based on resolution
+        const baseDensity = Math.floor((canvas.width * canvas.height) / 3500);
+        const starCount = Math.min(window.innerWidth < 768 ? 120 : 320, baseDensity);
 
         for (let i = 0; i < starCount; i++) {
-            const isFarLayer = Math.random() > 0.35;
+            const isFarLayer = Math.random() > 0.3;
+            const isFlareStar = !isFarLayer && Math.random() < 0.15; // 15% prominent floating stars
+            
             stars.push({
                 x: Math.random() * canvas.width,
                 y: Math.random() * canvas.height,
-                radius: isFarLayer ? Math.random() * 0.6 + 0.3 : Math.random() * 1.1 + 0.7,
-                alpha: Math.random() * 0.75 + 0.2,
-                twinkleSpeed: Math.random() * 0.012 + 0.003,
+                radius: isFlareStar ? Math.random() * 1.6 + 1.2 : (isFarLayer ? Math.random() * 0.6 + 0.3 : Math.random() * 1.1 + 0.6),
+                alpha: Math.random() * 0.75 + 0.25,
+                twinkleSpeed: Math.random() * 0.015 + 0.004,
                 twinklePhase: Math.random() * Math.PI * 2,
-                driftX: isFarLayer ? (Math.random() - 0.5) * 0.04 : (Math.random() - 0.5) * 0.08,
-                driftY: isFarLayer ? (Math.random() - 0.5) * 0.04 : (Math.random() - 0.5) * 0.08,
-                isFar: isFarLayer
+                driftX: isFarLayer ? (Math.random() - 0.5) * 0.05 : (Math.random() - 0.5) * 0.12,
+                driftY: isFarLayer ? (Math.random() - 0.55) * 0.15 : (Math.random() - 0.6) * 0.28, // Upward floating motion
+                swayFreq: Math.random() * 0.002 + 0.001,
+                swayAmp: Math.random() * 0.4 + 0.1,
+                isFar: isFarLayer,
+                isFlare: isFlareStar
             });
         }
+    }
+
+    function spawnShootingStar() {
+        if (Math.random() < 0.018 && shootingStars.length < 2) {
+            shootingStars.push({
+                x: Math.random() * canvas.width * 0.8,
+                y: Math.random() * canvas.height * 0.4,
+                length: Math.random() * 80 + 40,
+                speed: Math.random() * 10 + 6,
+                angle: Math.PI / 4 + (Math.random() - 0.5) * 0.2, // 45 degree angle
+                alpha: 1,
+                decay: Math.random() * 0.02 + 0.015
+            });
+        }
+    }
+
+    function draw4PointStar(x, y, size, alpha) {
+        ctx.save();
+        ctx.translate(x, y);
+        ctx.strokeStyle = `rgba(180, 210, 255, ${alpha * 0.7})`;
+        ctx.lineWidth = 1;
+        
+        // Vertical flare line
+        ctx.beginPath();
+        ctx.moveTo(0, -size * 3.5);
+        ctx.lineTo(0, size * 3.5);
+        ctx.stroke();
+
+        // Horizontal flare line
+        ctx.beginPath();
+        ctx.moveTo(-size * 3.5, 0);
+        ctx.lineTo(size * 3.5, 0);
+        ctx.stroke();
+
+        ctx.restore();
     }
 
     function renderStarfield() {
@@ -332,33 +374,69 @@ function initCosmicBackground() {
         for (let i = 0; i < stars.length; i++) {
             const star = stars[i];
             
-            // Slow Drift Movement
-            star.x += star.driftX;
+            // Upward & Swaying Floating Movement
+            star.x += star.driftX + Math.sin(now * star.swayFreq) * star.swayAmp;
             star.y += star.driftY;
 
-            // Wrap around canvas edges
-            if (star.x < 0) star.x = canvas.width;
-            if (star.x > canvas.width) star.x = 0;
-            if (star.y < 0) star.y = canvas.height;
-            if (star.y > canvas.height) star.y = 0;
+            // Wrap around canvas edges continuously
+            if (star.x < -10) star.x = canvas.width + 10;
+            if (star.x > canvas.width + 10) star.x = -10;
+            if (star.y < -10) star.y = canvas.height + 10;
+            if (star.y > canvas.height + 10) star.y = -10;
 
             // Individual Twinkle Phase
-            const currentAlpha = Math.max(0.12, Math.min(0.95, star.alpha + Math.sin(now * star.twinkleSpeed + star.twinklePhase) * 0.35));
+            const currentAlpha = Math.max(0.15, Math.min(0.98, star.alpha + Math.sin(now * star.twinkleSpeed + star.twinklePhase) * 0.4));
 
             ctx.beginPath();
             ctx.arc(star.x, star.y, star.radius, 0, Math.PI * 2);
             
-            // Give closer stars a tiny soft blue tint glow
-            if (!star.isFar && star.radius > 1.2) {
-                ctx.fillStyle = `rgba(180, 205, 255, ${currentAlpha})`;
+            if (star.isFlare) {
+                ctx.fillStyle = `rgba(220, 235, 255, ${currentAlpha})`;
+                ctx.shadowBlur = 8;
+                ctx.shadowColor = 'rgba(121, 160, 255, 0.75)';
+                ctx.fill();
+
+                // Draw 4-point starlight lens flare
+                draw4PointStar(star.x, star.y, star.radius, currentAlpha);
+            } else if (!star.isFar && star.radius > 1.0) {
+                ctx.fillStyle = `rgba(185, 210, 255, ${currentAlpha})`;
                 ctx.shadowBlur = 4;
-                ctx.shadowColor = 'rgba(107, 140, 255, 0.4)';
+                ctx.shadowColor = 'rgba(107, 140, 255, 0.45)';
+                ctx.fill();
             } else {
                 ctx.fillStyle = `rgba(255, 255, 255, ${currentAlpha})`;
                 ctx.shadowBlur = 0;
+                ctx.fill();
             }
-            
-            ctx.fill();
+        }
+
+        // Render Floating Shooting Star Meteors
+        spawnShootingStar();
+        for (let i = shootingStars.length - 1; i >= 0; i--) {
+            const ss = shootingStars[i];
+            ss.x += Math.cos(ss.angle) * ss.speed;
+            ss.y += Math.sin(ss.angle) * ss.speed;
+            ss.alpha -= ss.decay;
+
+            if (ss.alpha <= 0 || ss.x > canvas.width || ss.y > canvas.height) {
+                shootingStars.splice(i, 1);
+                continue;
+            }
+
+            const tailX = ss.x - Math.cos(ss.angle) * ss.length;
+            const tailY = ss.y - Math.sin(ss.angle) * ss.length;
+
+            const grad = ctx.createLinearGradient(ss.x, ss.y, tailX, tailY);
+            grad.addColorStop(0, `rgba(255, 255, 255, ${ss.alpha})`);
+            grad.addColorStop(0.3, `rgba(140, 180, 255, ${ss.alpha * 0.6})`);
+            grad.addColorStop(1, 'transparent');
+
+            ctx.beginPath();
+            ctx.moveTo(ss.x, ss.y);
+            ctx.lineTo(tailX, tailY);
+            ctx.strokeStyle = grad;
+            ctx.lineWidth = 1.8;
+            ctx.stroke();
         }
 
         if (!document.hidden) {
