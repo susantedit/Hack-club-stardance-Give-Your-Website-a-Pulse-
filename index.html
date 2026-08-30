@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>New Tab</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;700&family=Space+Grotesk:wght@300;400;500;600&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="background-container" id="bg-container">
+        <!-- Background image will be set here dynamically -->
+        <div class="overlay"></div>
+    </div>
+
+    <main class="content-wrapper">
+        <header class="top-bar">
+            <div class="nasa-info" id="nasa-info">
+                <span class="loading">Fetching universe...</span>
+            </div>
+            <div class="search-container">
+                <form id="search-form" action="https://www.google.com/search" method="GET">
+                    <input type="text" name="q" placeholder="Search the web..." class="search-input" autofocus>
+                </form>
+            </div>
+        </header>
+
+        <section class="center-content">
+            <div class="time-container">
+                <h1 id="clock">00:00</h1>
+                <p id="date">Loading date...</p>
+            </div>
+            <div class="greeting-container">
+                <h2 id="greeting">Good day, Explorer.</h2>
+            </div>
+        </section>
+
+        <section class="bottom-content">
+            <div class="quick-links" id="quick-links">
+                <!-- Links will be populated by JS -->
+            </div>
+            <button id="add-link-btn" class="glass-btn" title="Add quick link">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
+            </button>
+        </section>
+    </main>
+
+    <!-- Modal for adding links -->
+    <div id="link-modal" class="modal hidden">
+        <div class="modal-content glass-panel">
+            <h3>Add Quick Link</h3>
+            <form id="add-link-form">
+                <input type="text" id="link-title" placeholder="Title (e.g. GitHub)" required>
+                <input type="url" id="link-url" placeholder="URL (https://...)" required>
+                <div class="modal-actions">
+                    <button type="button" id="cancel-link" class="glass-btn">Cancel</button>
+                    <button type="submit" class="glass-btn primary">Add</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Modal for APOD info -->
+    <div id="apod-modal" class="modal hidden">
+        <div class="modal-content glass-panel apod-details">
+            <h3 id="apod-title">Title</h3>
+            <p id="apod-desc">Description</p>
+            <div class="modal-actions">
+                <button type="button" id="close-apod" class="glass-btn">Close</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
