@@ -284,9 +284,10 @@ body {
 }
 
 .nav-link.active {
-    color: #fff;
-    background: var(--accent-cyan);
-    box-shadow: 0 4px 12px rgba(107, 140, 255, 0.4);
+    color: var(--text-primary);
+    background: rgba(121, 160, 255, 0.14);
+    border: 1px solid rgba(121, 160, 255, 0.28);
+    box-shadow: 0 0 16px rgba(121, 160, 255, 0.12);
 }
 
 .hud-controls {
