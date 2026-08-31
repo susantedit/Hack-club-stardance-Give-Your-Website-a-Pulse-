@@ -1,58 +1,53 @@
-# 🚀 COSMORA — Hack Club Stardance Mission Devlog
+# Cosmora Development Log
 
-> *"Somewhere in the cosmos, something is waiting."*  
-> *"The universe is closer than you think."*
-
-Welcome to the official development log for **COSMORA**, a custom deep-space astronomical observation dashboard created by **[Kantaraj Luitel (Susant)](https://github.com/susantedit)** for the [Hack Club Stardance Mission](https://stardance.hackclub.com/missions/nasa-page).
-
-- 👨‍💻 **Developer**: Kantaraj Luitel (Susant) (Nepal 🇳🇵)
-- 🌐 **Portfolio/GitHub**: [https://github.com/susantedit](https://github.com/susantedit)
-- ☕ **Support/Donate**: [Buy Me a Coffee](https://buymeacoffee.com/Susantedit)
+Project: Cosmora (Hack Club Stardance Mission)  
+Author: Kantaraj Luitel (Susant)  
+GitHub: https://github.com/susantedit  
 
 ---
 
-## 📅 Log Entry 1: Conceptualization & Architecture Setup
-- **Goal**: Create a new tab dashboard experience that feels like looking through a spacecraft observation viewport into deep space.
-- **Tech Stack Selected**: HTML5, Vanilla CSS3 (Glassmorphism design system), Vanilla JavaScript (ES Modules), Vite bundler, and NASA APOD REST API.
-- **Initial Setup**: Configured Vite configuration (`vite.config.js`), environment variable handling (`.env` and `.env.example`), `.gitignore` secret exclusion, and Node 22 GitHub Actions automated deployment workflow (`.github/workflows/deploy.yml`).
+### Day 1: Project Setup and Initial Layout
+- Decided to build an astronomy new tab start page for the Hack Club Stardance mission.
+- Set up a clean Vite project with vanilla HTML, CSS, and JavaScript.
+- Built the top navigation header and viewport container with glassmorphic cards.
+- Configured `.env.example` and `.gitignore` to keep NASA API keys safe.
 
 ---
 
-## 🌌 Log Entry 2: Cosmic Background & Particle Animation Engine
-- **Procedural Canvas Starfield**: Built an HTML5 `<canvas>` particle system generating multi-depth star layers (far faint stars + near bright starlight flares) with continuous upward floating motion, sinusoidal sway, and individual twinkling phases.
-- **4-Point Starlight Lens Flares**: Programmed a 4-point cross flare renderer (`draw4PointStar`) for prominent celestial stars.
-- **Shooting Meteors**: Added a dynamic meteor generator spawning 45-degree angle shooting stars with gradient decay tails across the screen.
+### Day 2: Dynamic Canvas Starfield
+- The initial dark background felt too static, so I built an HTML5 canvas particle background.
+- Generated hundreds of stars with independent twinkle speeds and subtle upward drift.
+- Added cross lens flares for brighter foreground stars and occasional shooting stars.
+- Hooked into `document.visibilitychange` to stop `requestAnimationFrame` when the user switches tabs to save CPU and battery.
+- Added a `prefers-reduced-motion` media query check so users with motion sensitivity get a clean static background.
 
 ---
 
-## 🪐 Log Entry 3: 3D Celestial Planets & Atmosphere
-- **Saturn-Like Ringed Gas Giant**: Constructed a 3D CSS planet (`.planet-saturn`) with an tilted elliptical dual-tone ring system (`.saturn-ring-system`) and subtle 45s floating keyframe animation.
-- **Plasma Sun Core**: Rendered a deep space plasma star (`.star-plasma-sun`) in the upper-left quadrant featuring pulsating radial solar flare gradients.
-- **Orbiting Exo-Moon**: Created a 3D orbiting moon (`.moon-orbit-system`) revolving in a 360° trajectory around its celestial anchor.
-- **Violet Aurora Curtain**: Added a glowing violet/magenta nebula curtain (`.nebula-aurora`) with 40s ambient rotation.
+### Day 3: NASA APOD Integration
+- Integrated NASA's Astronomy Picture of the Day API (`https://api.nasa.gov/planetary/apod`).
+- Handled different media types returned by NASA (JPG/PNG images, YouTube video embeds, and direct MP4 clips).
+- Added an in-memory Map cache so switching between views or re-selecting dates does not trigger unnecessary API requests.
+- Built the temporal date picker modal allowing users to view any APOD record since June 16, 1995.
 
 ---
 
-## 📡 Log Entry 4: NASA APOD API Integration & In-Memory Cache
-- **Data Service Engine**: Integrated NASA's Planetary APOD API (`getAPOD()`) with support for High-Res Images, 16:9 YouTube video embeds, native MP4 videos, and interactive fallbacks.
-- **In-Memory Transmission Cache**: Implemented an in-memory `apodCache = new Map()` data structure. Revisiting previously viewed dates or clicking `TODAY` loads instantly from memory with zero redundant API calls.
-- **Layout Shift Prevention (CLS < 0.01)**: Designed fixed-dimension skeleton loaders matching the APOD media stage container.
+### Day 4: New Tab Dashboard & Local Storage Widgets
+- Created the centerpiece digital clock and Google search input with a `/` hotkey focus shortcut.
+- Built the quick launcher shortcuts card with an "Add Shortcut" modal, persisting custom bookmarks to `localStorage`.
+- Built the daily task tracker to let users check off and delete items, also saved to `localStorage`.
+- Created the quick scratchpad note area with automatic debounced saving to `localStorage` and character/word counters.
+- Implemented lunar ephemeris calculations based on synodic orbital math to show moon illumination and render dynamic SVG phase shadow curves.
 
 ---
 
-## 🔊 Log Entry 5: Web Audio API Cosmic Synth & Interactive Features
-- **Pure Browser Web Audio Synth**: Programmed a zero-dependency dual-oscillator Web Audio synth (55Hz sub-bass drone + 110Hz harmonic) with smooth exponential gain fading accessible via the **`AUDIO ON`** button in the top navigation bar.
-- **Temporal Date Archive Explorer**: Built an in-page modal date picker allowing visitors to explore historical NASA observations back to June 16, 1995.
-- **Live Telemetry Clock**: UTC clock displaying hours, minutes, and seconds with clickable 12h / 24h format toggling.
+### Day 5: 3D Solar System Integration & Web Audio Synth
+- Integrated Julian Garnier's open-source 3D CSS Solar System module (under MIT license) into an iframe for the "3D Orbits" view so users can inspect planetary orbits and toggle 2D/3D views.
+- Created an ambient deep-space drone sound using native Web Audio API oscillators (55Hz sine sub-bass + 110Hz triangle wave) passing through a 220Hz lowpass filter with exponential gain fading.
+- Cleaned up build scripts so the solar assets reside directly in `public/solar/` without needing custom copy scripts during build.
 
 ---
 
-## ♿ Log Entry 6: Accessibility, Performance & SEO Audit
-- **WCAG AA Compliance**: High-contrast typography palette (`#f2f6ff` primary text, 16.8:1 contrast ratio against deep space background).
-- **Reduced Motion**: Full `@media (prefers-reduced-motion: reduce)` support disabling canvas rendering and CSS keyframe transforms for users with motion sensitivity.
-- **Production Build & CI/CD**: Verified clean Vite production builds (`npm run build`) and automated GitHub Pages deployment.
-
----
-
-🌐 **Live Deployed Site**: [https://susantedit.github.io/Hack-club-stardance-Give-Your-Website-a-Pulse-/](https://susantedit.github.io/Hack-club-stardance-Give-Your-Website-a-Pulse-/)  
-📁 **GitHub Repository**: [susantedit/Hack-club-stardance-Give-Your-Website-a-Pulse-](https://github.com/susantedit/Hack-club-stardance-Give-Your-Website-a-Pulse-)
+### Day 6: Modular Refactor, Testing & Polish
+- Refactored the monolithic script into clean ES modules in `src/` (`apod.js`, `background.js`, `clock.js`, `shortcuts.js`, `tasks.js`, `notes.js`, `lunar.js`, `iss.js`, `audio.js`, `navigation.js`, and `main.js`).
+- Verified responsive layouts on mobile and desktop viewports.
+- Tested production build with `npm run build` and verified zero console warnings or missing assets.

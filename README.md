@@ -1,153 +1,124 @@
-<div align="center">
-  <img src="./COSMORA.png" alt="COSMORA Logo" width="160" style="border-radius: 24px; box-shadow: 0 0 40px rgba(121,160,255,0.4);" />
-  <h1>🪐 COSMORA</h1>
-  <h3>Deep Space Astronomical Observation Console & Minimal New Tab Dashboard</h3>
-  <p><em>"Somewhere in the cosmos, something is waiting."</em> — Carl Sagan</p>
-  <p><em>"The universe is closer than you think."</em></p>
+# Cosmora
 
-  <br>
+Cosmora is a space-themed new tab dashboard and astronomy start page built for the Hack Club Stardance mission.
 
-  [![Hack Club Stardance](https://img.shields.io/badge/Hack%20Club-Stardance%20Mission-ec3750?style=for-the-badge&logo=hackclub&logoColor=white)](https://stardance.hackclub.com/missions/nasa-page)
-  [![Vite](https://img.shields.io/badge/Bundler-Vite%205-646CFF?style=for-the-badge&logo=vite&logoColor=white)](https://vitejs.dev/)
-  [![NASA API](https://img.shields.io/badge/Data-NASA%20APOD%20API-0B3D91?style=for-the-badge&logo=nasa&logoColor=white)](https://api.nasa.gov/)
-  [![License: MIT](https://img.shields.io/badge/License-MIT-50e3c2?style=for-the-badge)](./LICENSE)
-</div>
+Instead of opening a blank browser tab, Cosmora gives you a clean dark dashboard featuring NASA's Astronomy Picture of the Day, an interactive 3D solar system view, local task tracking, quick bookmarks, scratchpad notes, moon phase math, and ambient space audio.
 
----
+## Demo
 
-## 🌌 Overview
+- Live site: https://susantedit.github.io/Hack-club-stardance-Give-Your-Website-a-Pulse-/
+- GitHub: https://github.com/susantedit/Hack-club-stardance-Give-Your-Website-a-Pulse-
 
-**COSMORA** is an astronomical new tab dashboard and deep-space observation workstation built for the **[Hack Club Stardance Mission](https://stardance.hackclub.com/missions/nasa-page)**.
+## Why I Built It
 
-Instead of opening a plain browser new tab, **COSMORA** transforms your screen into a spacecraft observation deck looking into deep space. It brings together NASA's Astronomy Picture of the Day (APOD), full-bleed 3D CSS planetary orbits, real-time mathematical lunar ephemeris, live ISS telemetry tracking, developer quick-launch shortcuts, interactive task managers, and auto-saving scratchpads into one unified interface.
+I spend a lot of time in my browser and wanted a custom new tab page that felt like an astronomy dashboard rather than an empty page or a generic browser default. I have always been fascinated by space exploration and wanted to build something that combines daily NASA imagery with useful everyday developer tools like quick links, a task list, and a scratchpad.
 
----
+## Features
 
-## ✨ Key Features
+- **Daily NASA APOD**: Pulls the daily Astronomy Picture of the Day from NASA's Open API, supporting high-resolution images, YouTube video embeds, and direct MP4 clips with scientific explanations.
+- **Archive Date Explorer**: Allows jumping back to any date in astronomical history since NASA started the APOD archive on June 16, 1995.
+- **Interactive 3D Solar System**: View planetary orbits, toggle between 2D and 3D perspectives, and inspect planet speeds and sizes.
+- **Lunar Calculations**: Computes real-time synodic moon phases, illumination percentage, lunar age in days, and countdown to the next full moon.
+- **Simulated ISS Telemetry**: Shows simulated real-time orbital speed, altitude, coordinates, and geomagnetic conditions.
+- **Quick Bookmarks Launcher**: Customizable shortcuts for favorite websites stored locally in `localStorage`.
+- **Mission Task List**: Persistent checklist to keep track of daily goals, saved in `localStorage`.
+- **Scratchpad Notes**: Auto-saving note area with live character and word counters.
+- **Ambient Space Drone**: Dual-oscillator synthesizer built using native Web Audio API (55Hz sine wave and 110Hz triangle wave through a low-pass filter).
+- **Canvas Starfield**: Procedural 2D canvas starfield with drifting stars, twinkling brightness, and shooting meteors.
 
-### 1. 🪐 Minimal New Tab Dashboard (`HOME`)
-- **Centerpiece Digital Clock**: Large clock with automatic local date resolution and subtle cosmic gradient glow.
-- **Google Universal Search Bar**: Quick launcher search input with keyboard shortcut focus (`/`).
-- **6-Card Interactive Bento Grid**:
-  1. **Daily APOD Discovery**: Live photo preview, title, explanation excerpt, and one-click jump to full transmission.
-  2. **Quick Launcher Shortcuts**: Preloaded with GitHub, LinkedIn, Donate, NASA APOD, Hack Club, ChatGPT, YouTube, and X, plus a modal launcher to add custom URLs.
-  3. **Mission Task Tracker**: Interactive to-do list with persistent completion states in `localStorage`.
-  4. **Lunar Ephemeris & Moon Phases**: Real-time synodic lunar calculation, illumination %, lunar age in days, next full moon countdown, and dawn/dusk times with dynamic SVG shadow curve rendering.
-  5. **ISS Orbit & Space Weather Telemetry**: Real-time simulated ISS orbital speed (~27,580 km/h), altitude (~418.6 km), coordinates, Geomagnetic Kp-index, and solar wind flux.
-  6. **Cosmic Scratchpad & Notes**: Developer quick scratchpad with instant `localStorage` auto-saving, character & word counters, and one-click clipboard copying.
+## Technologies Used
 
-### 2. 🚀 Daily NASA APOD Transmission (`TODAY`)
-- Real-time fetching from NASA's official Astronomy Picture of the Day API.
-- Support for ultra-high-resolution images, full-bleed interactive pinch/zoom previews, and embedded YouTube/HTML5 videos.
-- Dedicated Mission Telemetry Log sidebar with copyright attribution, technical metadata, and educational astronomy explanations written by professional astrophysicists.
+- **HTML5 & CSS3**: Glassmorphism dark UI, CSS Grid layout, responsive typography (Cinzel, Cormorant Garamond, Manrope).
+- **JavaScript (ES Modules)**: Native vanilla JS without framework dependencies.
+- **Web APIs**: Web Audio API (ambient synth), Canvas 2D API (starfield), LocalStorage API (tasks, notes, shortcuts).
+- **NASA Open Data API**: Planetary Astronomy Picture of the Day (APOD) endpoint.
+- **Vite 5**: Bundler and local development server.
 
-### 3. 📅 Deep Space Archive Explorer (`ARCHIVE`)
-- Interactive date selector allowing users to time-travel back to any day in astronomical history since NASA APOD's inception on **June 16, 1995**.
-- Intelligent caching layer to ensure instant retrieval and zero redundant API calls.
+## Third-Party Components & Attribution
 
-### 4. 🌌 Full-Bleed 3D Planetary Orbits (`3D ORBITS`)
-- Integrated 3D CSS Solar System simulation spanning full viewport width (`100vw`).
-- Real-time planetary revolution velocities, custom orbital planes, celestial rings, and lighting.
-- Interactive controls for 2D/3D perspective, zoom scaling, orbital speed, physical sizes, and planetary distances.
+- **3D CSS Solar System**: The 3D planetary visualization embedded in the "3D Orbits" view is based on Julian Garnier's [3D CSS Solar System](https://github.com/juliangarnier/3D-CSS-Solar-System), licensed under the MIT License (see `public/solar/LICENSE.md`). Cosmora integrates this module into an iframe and provides the surrounding dashboard, NASA APOD integrations, canvas engine, and application logic.
 
-### 5. 🔊 Ambient Deep Space Synthesizer
-- Built-in Web Audio API dual-oscillator ambient sound engine (55Hz sub-bass sine + 110Hz triangle wave through a 220Hz lowpass filter).
-- Smooth gain ramping and volume fade-in/fade-out simulating deep-space radio emissions and cosmic background radiation.
-
-### 6. 🎨 Celestial Typography & Design System
-- **Cinzel** (600/700): Celestial, monumental major headings and COSMORA wordmark.
-- **Cormorant Garamond** (Italic 400–600): Poetic statements, cinematic quotes, and editorial introductions.
-- **Manrope** (400–700): Modern, usable UI text, buttons, forms, and metadata labels.
-- **Zero Emojis**: 100% resolution-independent, crisp inline SVG vector icons.
-
----
-
-## 🛠️ Tech Stack & Architecture
-
-| Layer | Technology |
-| :--- | :--- |
-| **Frontend Framework** | Vanilla HTML5, Vanilla JavaScript (ES Modules) |
-| **Styling & Design** | Vanilla CSS3 (Custom Glassmorphism Design System, CSS Grid Bento, Flexbox) |
-| **Typography** | Google Fonts (`Cinzel`, `Cormorant Garamond`, `Manrope`) |
-| **Bundler & Build Tool** | [Vite 5](https://vitejs.dev/) |
-| **APIs** | [NASA Open Data API](https://api.nasa.gov/) (`APOD`) |
-| **Audio Engine** | Native Web Audio API (Dual-Oscillator Synthesizer) |
-| **Graphics & Background** | HTML5 Canvas Dynamic Multilayer Particle Starfield & CSS Nebula |
-| **Hosting & CI/CD** | Vercel & GitHub Actions (`deploy.yml`) |
-
----
-
-## 🚀 Getting Started Locally
+## Running Locally
 
 ### Prerequisites
-- [Node.js](https://nodejs.org/) (version 18 or higher recommended)
-- [npm](https://www.npmjs.com/)
+- Node.js 18 or higher
+- npm
 
-### 1. Clone the Repository
+### 1. Clone the repository
 ```bash
 git clone https://github.com/susantedit/Hack-club-stardance-Give-Your-Website-a-Pulse-.git
 cd Hack-club-stardance-Give-Your-Website-a-Pulse-
 ```
 
-### 2. Install Dependencies
+### 2. Install dependencies
 ```bash
 npm install
 ```
 
-### 3. Setup Environment Variables
-Copy the example environment file and add your NASA API key (optional, fallback `DEMO_KEY` is provided):
+### 3. Setup environment variables (Optional)
+Copy the example environment file:
 ```bash
 cp .env.example .env
 ```
-Inside `.env`:
+Add your NASA API key in `.env`:
 ```ini
-VITE_NASA_API_KEY=YOUR_NASA_API_KEY_HERE
+VITE_NASA_API_KEY=YOUR_NASA_API_KEY
 ```
-*(Get a free API key at [api.nasa.gov](https://api.nasa.gov/))*
+*(If no key is provided, the application defaults to `DEMO_KEY`).*
 
-### 4. Start Development Server
+### 4. Start development server
 ```bash
 npm run dev
 ```
-Open your browser and navigate to `http://localhost:5173`.
+Open `http://localhost:5173` in your browser.
 
-### 5. Build for Production
+### 5. Build for production
 ```bash
 npm run build
 ```
-The optimized production bundle will be generated in the `dist/` directory.
+The production bundle will be generated inside the `dist/` directory.
 
----
+## Project Structure
 
-## 🌐 Deploying to Vercel
+```text
+- index.html: Main HTML layout and dashboard structure
+- style.css: Design system and layout styles
+- vite.config.js: Vite configuration
+- package.json: Project dependencies
+- src/main.js: App entry point and event wiring
+- src/apod.js: NASA APOD fetching, caching, and media rendering
+- src/background.js: Canvas starfield particle loop and parallax
+- src/clock.js: Dashboard and UTC clocks
+- src/shortcuts.js: Bookmark launcher and modal
+- src/tasks.js: Persistent to-do list manager
+- src/notes.js: Scratchpad with auto-save and counters
+- src/lunar.js: Moon phase calculations and SVG shadow curve
+- src/iss.js: Simulated ISS orbital telemetry
+- src/audio.js: Web Audio ambient drone synthesizer
+- src/navigation.js: View routing and modal controls
+- public/COSMORA.png: Logo asset
+- public/solar/: 3D Solar System module by Julian Garnier (MIT)
+```
 
-1. Push your code to GitHub.
-2. Go to **[vercel.com](https://vercel.com)** and click **"Add New Project"**.
-3. Import this repository (`susantedit/Hack-club-stardance-Give-Your-Website-a-Pulse-`).
-4. Set the **Project Name** to `cosmora`.
-5. Keep default build settings:
-   - **Framework Preset**: `Vite`
-   - **Build Command**: `npm run build`
-   - **Output Directory**: `dist`
-6. Click **Deploy**!
+## What I Learned
 
----
+- How to fetch and parse diverse REST API payloads (handling both static image formats and YouTube/HTML5 video embeds).
+- How to create a performant 2D canvas animation that pauses gracefully when the browser tab is hidden using `document.visibilitychange`.
+- How to generate audio directly in the browser with Web Audio API oscillators and gain nodes without loading external MP3 files.
+- Calculating synodic lunar orbital cycles to dynamically construct SVG shadow curves for moon phases.
+- Structuring a modular vanilla JavaScript codebase using ES modules.
 
-## 👨‍💻 Author
+## Known Limitations
 
-**Kantaraj Luitel (Susant)**
-- GitHub: [@susantedit](https://github.com/susantedit)
-- LinkedIn: [kantaraj-luitel](https://linkedin.com/in/kantaraj-luitel)
+- The ISS orbital telemetry and geomagnetic Kp-index values are simulated via mathematical approximations rather than live satellite radio feeds.
+- The default NASA `DEMO_KEY` has hourly rate limits (30 requests per IP per hour). Adding a free personal key from api.nasa.gov is recommended for heavy archive browsing.
 
----
+## Creator
 
-## 📄 License
+Built by **Kantaraj Luitel (Susant)**
+- GitHub: https://github.com/susantedit
+- LinkedIn: https://linkedin.com/in/kantaraj-luitel
 
-This project is licensed under the **MIT License** — see the [LICENSE](./LICENSE) file for details.
+## License
 
----
-
-<div align="center">
-  <p>Built with ❤️ for the <strong>Hack Club Stardance Mission</strong>.</p>
-  <p><em>COSMIC OBSERVER v2.0 • POWERED BY NASA APOD API</em></p>
-</div>
+This project is licensed under the MIT License. See [LICENSE](./LICENSE) for details.

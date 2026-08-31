@@ -2132,11 +2132,9 @@ html, body {
 }
 
 
-/* ==========================================================================
-   COSMORA BRAND TYPOGRAPHY SYSTEM (CINZEL, CORMORANT GARAMOND, MANROPE)
-   ========================================================================== */
+/* Typography font definitions */
 
-/* 1. CINZEL — BRAND & MAJOR HEADINGS */
+/* 1. Cinzel: Brand and major headings */
 .brand-title,
 .hero-headline,
 .apod-title,
@@ -2176,7 +2174,7 @@ html, body {
     letter-spacing: 3px !important;
 }
 
-/* 2. CORMORANT GARAMOND — POETIC / EDITORIAL TEXT */
+/* 2. Cormorant Garamond: Subheadings and dates */
 .brand-tagline,
 .brand-subtagline,
 .eyebrow-text,
@@ -2217,7 +2215,7 @@ html, body {
     letter-spacing: 2px !important;
 }
 
-/* 3. MANROPE — UI / BODY / CONTROLS */
+/* 3. Manrope: UI, body, and controls */
 body,
 p,
 span,
