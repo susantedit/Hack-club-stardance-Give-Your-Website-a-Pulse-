@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <title>New Tab</title>
+    <link rel="icon" href="icons/search.png" type="image/png" />
+
+    <link rel="stylesheet" href="style.css" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css"
+    />
+  </head>
+
+  <body>
+   
+    <div class="background"></div>
+    <a
+      class="apod-button"
+      href="https://apod.nasa.gov/apod/astropix.html"
+      target="_blank"
+      title="view info about the background"
+    >
+      <i class="fa-solid fa-circle-info"></i>
+    </a>
+
+    <main class="hero">
+      <section class="clock-section">
+        <h1 id="clock">00:00</h1>
+
+        <p id="date">Tuesday, July 14</p>
+      </section>
+
+      <section class="search-section">
+        <div class="search-container">
+
+          <button id="engine-button">
+            <img id="engine-icon" src="icons/google.svg" alt="Search Engine" />
+          </button>
+
+          <input
+            type="text"
+            id="search-input"
+            placeholder="Search the web..."
+          />
+
+          <!-- search engine dropdown -->
+          <div id="engine-dropdown" class="dropdown hidden">
+            <button class="engine-option" data-engine="google">
+              <img src="icons/google.svg" alt="Google" />
+              <span>Google</span>
+            </button>
+
+            <button class="engine-option" data-engine="duckduckgo">
+              <img src="icons/duckduckgo.svg" alt="DuckDuckGo" />
+              <span>DuckDuckGo</span>
+            </button>
+
+            <button class="engine-option" data-engine="brave">
+              <img src="icons/brave.svg" alt="Brave" />
+              <span>Brave</span>
+            </button>
+
+            <button class="engine-option" data-engine="startpage">
+              <img src="icons/startpage.svg" alt="Startpage" />
+              <span>Startpage</span>
+            </button>
+          </div>
+        </div>
+
+
+
+        <div class="favorites">
+          <a href="https://github.com" class="favorite" target="_blank">
+            <i class="fa-brands fa-github"></i>
+            <span>GitHub</span>
+          </a>
+
+          <a href="https://youtube.com" class="favorite" target="_blank">
+            <i class="fa-brands fa-youtube"></i>
+            <span>YouTube</span>
+          </a>
+
+          <a href="https://reddit.com" class="favorite" target="_blank">
+            <i class="fa-brands fa-reddit-alien"></i>
+            <span>Reddit</span>
+          </a>
+
+          <a href="https://gmail.com" class="favorite" target="_blank">
+            <i class="fa-solid fa-envelope"></i>
+            <span>Gmail</span>
+          </a>
+
+          <a href="https://notion.so" class="favorite" target="_blank">
+            <i class="fa-solid fa-note-sticky"></i>
+            <span>Notion</span>
+          </a>
+        </div>
+      </section>
+      <div class="scroll-indicator">
+        <i class="fa-solid fa-chevron-down"></i>
+      </div>
+      <div class="madeby">
+        <p>made by</p>
+        <span>Kanta Raj Luitel</span>
+      </div>
+    </main>
+
+  
+    <button id="settings-button">
+      <i class="fa-solid fa-gear"></i>
+    </button>
+    <div id="settings-panel" class="hidden">
+      <h2>Settings</h2>
+
+      <div class="setting-group">
+        <h3>Theme</h3>
+
+        <button class="theme-btn" data-theme="dark">
+          <i class="fa-solid fa-moon"></i> Dark
+        </button>
+
+        <button class="theme-btn" data-theme="light">
+          <i class="fa-regular fa-sun"></i> Light
+        </button>
+      </div>
+
+      <div class="setting-group">
+        <h3>Accent</h3>
+
+        <div class="accent-picker">
+          <button class="accent" data-color="#46cb8f"></button>
+          <button class="accent" data-color="#4F8EF7"></button>
+          <button class="accent" data-color="#B26CFF"></button>
+          <button class="accent" data-color="#FF914D"></button>
+          <button class="accent" data-color="#FF5E7E"></button>
+        </div>
+      </div>
+    </div>
+    <section class="news-section">
+      <div class="news-header">
+        <h2>Today's News</h2>
+
+        <p>Top headlines from around the world.</p>
+        <div class="news-tabs">
+          <button class="news-tab active" data-category="general">All</button>
+
+          <button class="news-tab" data-category="technology">
+            Technology
+          </button>
+
+          <button class="news-tab" data-category="science">Science</button>
+
+          <button class="news-tab" data-category="business">Business</button>
+
+          <button class="news-tab" data-category="sports">Sports</button>
+
+          <button class="news-tab" data-category="entertainment">
+            Entertainment
+          </button>
+        </div>
+      </div>
+
+      <div id="news-container"></div>
+    </section>
+
+    <script src="script.js"></script>
+
+  </body>
+
+</html>

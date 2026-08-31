@@ -1,1 +1,0 @@
-Cosmora is a space-themed new tab dashboard and observation deck built for the Hack Club Stardance Mission. Features daily NASA APOD, 3D CSS planetary orbits, real-time lunar calculations, ISS telemetry, custom shortcuts, persistent task tracker, auto-saving notes, and a Web Audio space synth.
