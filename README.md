@@ -34,5 +34,7 @@ get rid of your boring, lifeless and default newtab page. this is a functional n
 
 ## screenshots and videos
 
+![Screenshot](newtab-main/backgrounds/newtab.png)
+
 ---
 <div align="right">- made by Kanta Raj Luitel</div>
