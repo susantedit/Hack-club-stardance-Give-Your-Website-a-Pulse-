@@ -1,7 +1,7 @@
 # newtab
 a minimalistic (i guess it is), clean and modern looking custom new tab page that gets its background from nasa's astronomy picture of the day api.
 
-![newtab](newtab-main/backgrounds/newtab.png)
+![newtab](backgrounds/newtab.png)
 
 
 ## description
@@ -34,7 +34,7 @@ get rid of your boring, lifeless and default newtab page. this is a functional n
 
 ## screenshots and videos
 
-![Screenshot](newtab-main/backgrounds/newtab.png)
+![Screenshot](backgrounds/newtab.png)
 
 ---
 <div align="right">- made by Kanta Raj Luitel</div>
