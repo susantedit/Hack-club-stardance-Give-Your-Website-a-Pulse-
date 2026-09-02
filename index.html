@@ -3,6 +3,7 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content="A modern, aesthetic custom new tab page powered by NASA APOD backgrounds and real-time news." />
 
     <title>New Tab</title>
     <link rel="icon" href="icons/search.png" type="image/png" />
@@ -22,159 +23,149 @@
   </head>
 
   <body>
-   
-    <div class="background"></div>
+    <div class="background" aria-hidden="true"></div>
+
     <a
+      id="apod-link"
       class="apod-button"
       href="https://apod.nasa.gov/apod/astropix.html"
       target="_blank"
-      title="view info about the background"
+      rel="noopener noreferrer"
+      aria-label="View info about today's NASA Astronomy Picture of the Day"
+      title="View APOD Info"
     >
       <i class="fa-solid fa-circle-info"></i>
     </a>
 
     <main class="hero">
-      <section class="clock-section">
+      <section class="clock-section" aria-label="Current Time and Date">
         <h1 id="clock">00:00</h1>
-
         <p id="date">Tuesday, July 14</p>
       </section>
 
-      <section class="search-section">
+      <section class="search-section" aria-label="Web Search">
         <div class="search-container">
-
-          <button id="engine-button">
+          <button id="engine-button" aria-label="Select Search Engine" aria-haspopup="true" aria-expanded="false">
             <img id="engine-icon" src="icons/google.svg" alt="Search Engine" />
           </button>
 
           <input
             type="text"
             id="search-input"
-            placeholder="Search the web..."
+            placeholder="Search the web... (Press / to focus)"
+            autocomplete="off"
+            spellcheck="false"
+            aria-label="Search the web"
           />
 
-          <!-- search engine dropdown -->
-          <div id="engine-dropdown" class="dropdown hidden">
-            <button class="engine-option" data-engine="google">
+          <div id="engine-dropdown" class="dropdown hidden" role="menu">
+            <button class="engine-option" data-engine="google" role="menuitem">
               <img src="icons/google.svg" alt="Google" />
               <span>Google</span>
             </button>
 
-            <button class="engine-option" data-engine="duckduckgo">
+            <button class="engine-option" data-engine="duckduckgo" role="menuitem">
               <img src="icons/duckduckgo.svg" alt="DuckDuckGo" />
               <span>DuckDuckGo</span>
             </button>
 
-            <button class="engine-option" data-engine="brave">
+            <button class="engine-option" data-engine="brave" role="menuitem">
               <img src="icons/brave.svg" alt="Brave" />
               <span>Brave</span>
             </button>
 
-            <button class="engine-option" data-engine="startpage">
+            <button class="engine-option" data-engine="startpage" role="menuitem">
               <img src="icons/startpage.svg" alt="Startpage" />
               <span>Startpage</span>
             </button>
           </div>
         </div>
 
-
-
-        <div class="favorites">
-          <a href="https://github.com" class="favorite" target="_blank">
+        <div class="favorites" aria-label="Quick Access Bookmarks">
+          <a href="https://github.com" class="favorite" target="_blank" rel="noopener noreferrer" aria-label="GitHub">
             <i class="fa-brands fa-github"></i>
             <span>GitHub</span>
           </a>
 
-          <a href="https://youtube.com" class="favorite" target="_blank">
+          <a href="https://youtube.com" class="favorite" target="_blank" rel="noopener noreferrer" aria-label="YouTube">
             <i class="fa-brands fa-youtube"></i>
             <span>YouTube</span>
           </a>
 
-          <a href="https://reddit.com" class="favorite" target="_blank">
+          <a href="https://reddit.com" class="favorite" target="_blank" rel="noopener noreferrer" aria-label="Reddit">
             <i class="fa-brands fa-reddit-alien"></i>
             <span>Reddit</span>
           </a>
 
-          <a href="https://gmail.com" class="favorite" target="_blank">
+          <a href="https://gmail.com" class="favorite" target="_blank" rel="noopener noreferrer" aria-label="Gmail">
             <i class="fa-solid fa-envelope"></i>
             <span>Gmail</span>
           </a>
 
-          <a href="https://notion.so" class="favorite" target="_blank">
+          <a href="https://notion.so" class="favorite" target="_blank" rel="noopener noreferrer" aria-label="Notion">
             <i class="fa-solid fa-note-sticky"></i>
             <span>Notion</span>
           </a>
         </div>
       </section>
-      <div class="scroll-indicator">
+
+      <div class="scroll-indicator" aria-hidden="true">
         <i class="fa-solid fa-chevron-down"></i>
       </div>
+
       <div class="madeby">
         <p>made by</p>
         <span>Kanta Raj Luitel</span>
       </div>
     </main>
 
-  
-    <button id="settings-button">
+    <button id="settings-button" aria-label="Open Settings" aria-expanded="false">
       <i class="fa-solid fa-gear"></i>
     </button>
-    <div id="settings-panel" class="hidden">
+
+    <aside id="settings-panel" class="hidden" aria-label="Settings Menu">
       <h2>Settings</h2>
 
       <div class="setting-group">
         <h3>Theme</h3>
-
-        <button class="theme-btn" data-theme="dark">
+        <button class="theme-btn" data-theme="dark" aria-label="Switch to Dark Theme">
           <i class="fa-solid fa-moon"></i> Dark
         </button>
-
-        <button class="theme-btn" data-theme="light">
+        <button class="theme-btn" data-theme="light" aria-label="Switch to Light Theme">
           <i class="fa-regular fa-sun"></i> Light
         </button>
       </div>
 
       <div class="setting-group">
-        <h3>Accent</h3>
-
-        <div class="accent-picker">
-          <button class="accent" data-color="#46cb8f"></button>
-          <button class="accent" data-color="#4F8EF7"></button>
-          <button class="accent" data-color="#B26CFF"></button>
-          <button class="accent" data-color="#FF914D"></button>
-          <button class="accent" data-color="#FF5E7E"></button>
+        <h3>Accent Color</h3>
+        <div class="accent-picker" aria-label="Choose Accent Color">
+          <button class="accent" data-color="#46cb8f" aria-label="Green Accent"></button>
+          <button class="accent" data-color="#4F8EF7" aria-label="Blue Accent"></button>
+          <button class="accent" data-color="#B26CFF" aria-label="Purple Accent"></button>
+          <button class="accent" data-color="#FF914D" aria-label="Orange Accent"></button>
+          <button class="accent" data-color="#FF5E7E" aria-label="Pink Accent"></button>
         </div>
       </div>
-    </div>
-    <section class="news-section">
+    </aside>
+
+    <section class="news-section" aria-label="News Headlines">
       <div class="news-header">
         <h2>Today's News</h2>
-
         <p>Top headlines from around the world.</p>
-        <div class="news-tabs">
-          <button class="news-tab active" data-category="general">All</button>
 
-          <button class="news-tab" data-category="technology">
-            Technology
-          </button>
-
-          <button class="news-tab" data-category="science">Science</button>
-
-          <button class="news-tab" data-category="business">Business</button>
-
-          <button class="news-tab" data-category="sports">Sports</button>
-
-          <button class="news-tab" data-category="entertainment">
-            Entertainment
-          </button>
+        <div class="news-tabs" role="tablist">
+          <button class="news-tab active" data-category="general" role="tab" aria-selected="true">All</button>
+          <button class="news-tab" data-category="technology" role="tab" aria-selected="false">Technology</button>
+          <button class="news-tab" data-category="science" role="tab" aria-selected="false">Science</button>
+          <button class="news-tab" data-category="business" role="tab" aria-selected="false">Business</button>
+          <button class="news-tab" data-category="sports" role="tab" aria-selected="false">Sports</button>
+          <button class="news-tab" data-category="entertainment" role="tab" aria-selected="false">Entertainment</button>
         </div>
       </div>
 
-      <div id="news-container"></div>
+      <div id="news-container" aria-live="polite"></div>
     </section>
 
     <script src="script.js"></script>
-
   </body>
-
 </html>
